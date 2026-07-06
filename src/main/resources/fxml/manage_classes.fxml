@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane fx:controller="com.example.studentattendance.ManageClassesController" xmlns:fx="http://javafx.com/fxml">
+    <VBox spacing="10" alignment="TOP_CENTER">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+        <Label text="Manage Classes" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <ListView fx:id="classListView" prefHeight="400"/>
+    </VBox>
+</AnchorPane>

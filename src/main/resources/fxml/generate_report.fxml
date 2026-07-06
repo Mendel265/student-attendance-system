@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.GenerateReportController">
+    <top>
+        <VBox spacing="10">
+            <Label text="Generate Attendance Report" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <padding>
+                <Insets bottom="15" left="15" right="15" top="15" />
+            </padding>
+                <VBox spacing="5">
+                    <Label text="Class"/>
+                    <ComboBox fx:id="classComboBox" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Semester"/>
+                    <ComboBox fx:id="semesterComboBox" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Module"/>
+                    <ComboBox fx:id="moduleComboBox" prefWidth="150"/>
+                </VBox>
+                <Button text="Generate Report" onAction="#handleGenerate" prefHeight="35"/>
+
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="attendanceTable" prefHeight="400" prefWidth="600">
+            <columns>
+                <TableColumn fx:id="studentIdCol" text="Student ID" prefWidth="120"/>
+                <TableColumn fx:id="nameCol" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

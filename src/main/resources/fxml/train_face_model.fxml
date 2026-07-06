@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.studentattendance.TrainFaceModelController"
+      style="-fx-background-color: #f4f7fa; -fx-padding: 40;">
+
+    <!-- Title Label -->
+    <Label text=" Train Face Recognition Model"
+           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+    <!-- Train Button -->
+    <Button fx:id="trainButton"
+            text=" Train Model"
+            onAction="#trainModel"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 160px;" />
+
+    <!-- Status Label -->
+    <Label fx:id="statusLabel"
+           text="Status: Waiting to start..."
+           style="-fx-font-size: 14px; -fx-text-fill: #34495e;" />
+
+</VBox>

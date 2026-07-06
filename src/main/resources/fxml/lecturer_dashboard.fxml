@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="400" prefWidth="600" style="-fx-background-color: #f5f7fa;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.studentattendance.LecturerDashboardController">
+
+    <!-- Top: Header -->
+    <top>
+        <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-padding: 20px; -fx-text-fill: #2c3e50;" text="👨‍🏫 Lecturer Dashboard" BorderPane.alignment="CENTER" />
+    </top>
+
+    <!-- Center: Action Buttons -->
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <padding>
+                <Insets bottom="40" left="50" right="50" top="40" />
+            </padding>
+
+            <Button onAction="#handleTakeAttendance" style="-fx-font-size: 16px; -fx-pref-width: 250px; -fx-background-color: green; -fx-text-fill: white;" text=" Take Attendance" textFill="#17042e" />
+
+            <Button onAction="#handleRegisterStudent" style="-fx-font-size: 16px; -fx-pref-width: 250px; -fx-background-color: green; -fx-text-fill: white;" text="Register Student" />
+
+            <Button fx:id="btnTrainModel" onAction="#handleTrainModel" style="-fx-font-size: 16px; -fx-pref-width: 250px; -fx-background-color: green; -fx-text-fill: white;" text=" Train Face Model" />
+
+
+            <Button text="Print Attendance" onAction="#onPrintAttendance" style="-fx-font-size: 16px; -fx-pref-width: 250px; -fx-background-color: green; -fx-text-fill: white;"/>
+
+
+
+            <Button onAction="#handleLogout" style="-fx-font-size: 16px; -fx-pref-width: 250px; -fx-background-color: red; -fx-text-fill: white;" text=" Logout" />
+        </VBox>
+    </center>
+</BorderPane>

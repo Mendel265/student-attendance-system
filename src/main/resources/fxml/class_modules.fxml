@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.ClassModulesController">
+    <VBox spacing="20" alignment="CENTER">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+        <Label fx:id="infoLabel" text="Modules for Class and Semester" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <Button text="View Modules" onAction="#handleViewModules"/>
+        <Button text="Add Module" onAction="#handleAddModule"/>
+    </VBox>
+</AnchorPane>

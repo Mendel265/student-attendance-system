@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.AttendanceReportController">
+    <center>
+        <TableView fx:id="attendanceTable">
+            <columns>
+                <TableColumn fx:id="studentIdCol" text="Student ID" />
+                <TableColumn fx:id="nameCol" text="Name" />
+                <TableColumn fx:id="statusCol" text="Status" />
+                <TableColumn fx:id="checkInCol" text="Check-In Time" />
+                <TableColumn fx:id="checkOutCol" text="Check-Out Time" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

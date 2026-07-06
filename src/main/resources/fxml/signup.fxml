@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.studentattendance.SignUpController"
+      spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+
+    <Label text="Sign Up" style="-fx-font-size: 20px;" />
+
+    <TextField fx:id="usernameField" promptText="Username" />
+    <PasswordField fx:id="passwordField" promptText="Password" />
+
+    <ComboBox fx:id="roleComboBox" promptText="Select Role">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="admin" />
+                <String fx:value="lecturer" />
+            </FXCollections>
+        </items>
+    </ComboBox>
+
+    <Button text="Register" onAction="#handleSignup" />
+    <Hyperlink text="Back to Login" onAction="#goToLogin" />
+</VBox>

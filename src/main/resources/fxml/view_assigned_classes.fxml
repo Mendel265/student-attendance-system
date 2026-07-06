@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.ViewAssignedClassesController">
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <!-- Add this label to show the lecturer's name -->
+            <Label fx:id="lecturerLabel" text="Lecturer: " style="-fx-font-size: 14px;" />
+
+            <Label text="Assigned Classes and Modules" style="-fx-font-size: 16px;" />
+            <ListView fx:id="assignedListView" prefHeight="400" prefWidth="600"/>
+        </VBox>
+    </center>
+</BorderPane>
