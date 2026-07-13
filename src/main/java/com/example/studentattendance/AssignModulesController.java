@@ -2,11 +2,12 @@ package com.example.studentattendance;
 
 import com.example.studentattendance.database.DBConnection;
 import com.example.studentattendance.models.Lecturer;
+import com.example.studentattendance.models.Module;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.example.studentattendance.models.Module;
 import javafx.collections.*;
 import java.sql.*;
+
 
 
 public class AssignModulesController {
@@ -39,28 +40,36 @@ public class AssignModulesController {
 
 
 
+
     private void loadModules(){
 
         ObservableList<Module> modules =
                 FXCollections.observableArrayList();
 
 
-        String sql =
-                "SELECT id, module_name, class_name FROM modules";
+        String sql = "SELECT * FROM modules";
 
 
         try(Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()){
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
 
 
-            while(rs.next()){
+            while(rs.next()) {
 
-                Module module = new Module(
-                        rs.getInt("id"),
-                        rs.getString("class_name"),
-                        rs.getString("module_name"),
-                        rs.getString("semester")
+                Module module = new Module();
+
+                module.setId(rs.getInt("id"));
+                module.setClassName(rs.getString("class_name"));
+                module.setModuleName(rs.getString("module_name"));
+                module.setSemester(rs.getString("semester"));
+
+                modules.add(module);
+
+
+                System.out.println(
+                        rs.getInt("id") + " " +
+                                rs.getString("module_name")
                 );
 
             }
@@ -69,12 +78,10 @@ public class AssignModulesController {
             moduleListView.setItems(modules);
 
 
-        }catch(Exception e){
-
-            e.printStackTrace();
-
         }
-
+        catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -83,11 +90,9 @@ public class AssignModulesController {
     @FXML
     private void handleSave(){
 
-
         Module selected =
                 moduleListView.getSelectionModel()
                         .getSelectedItem();
-
 
 
         if(selected == null){
@@ -105,20 +110,61 @@ public class AssignModulesController {
         }
 
 
-
-        String sql =
-                """
-                INSERT INTO lecturer_module
-                (lecturer_id,module_id)
-                VALUES (?,?)
-                """;
+        try(Connection conn = DBConnection.getConnection()){
 
 
-        try(Connection conn =
-                    DBConnection.getConnection();
+            // CHECK IF MODULE IS ALREADY ASSIGNED
+            String checkSql =
+                    "SELECT COUNT(*) FROM lecturer_module WHERE lecturer_id=? AND module_id=?";
+
+
+            PreparedStatement checkStmt =
+                    conn.prepareStatement(checkSql);
+
+
+            checkStmt.setInt(
+                    1,
+                    lecturer.getId()
+            );
+
+
+            checkStmt.setInt(
+                    2,
+                    selected.getId()
+            );
+
+
+            ResultSet rs =
+                    checkStmt.executeQuery();
+
+
+            if(rs.next() && rs.getInt(1) > 0){
+
+                Alert alert =
+                        new Alert(Alert.AlertType.WARNING);
+
+                alert.setContentText(
+                        "This module is already assigned to this lecturer"
+                );
+
+                alert.showAndWait();
+
+                return;
+            }
+
+
+
+            // INSERT ONLY IF IT DOES NOT EXIST
+            String sql =
+                    """
+                    INSERT INTO lecturer_module
+                    (lecturer_id,module_id)
+                    VALUES (?,?)
+                    """;
+
 
             PreparedStatement ps =
-                    conn.prepareStatement(sql)){
+                    conn.prepareStatement(sql);
 
 
             ps.setInt(
@@ -147,12 +193,12 @@ public class AssignModulesController {
             alert.showAndWait();
 
 
+
         }catch(Exception e){
 
             e.printStackTrace();
 
         }
-
 
     }
 

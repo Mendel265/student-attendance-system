@@ -2,39 +2,49 @@ package com.example.studentattendance;
 
 import com.example.studentattendance.database.DBConnection;
 import com.example.studentattendance.models.Lecturer;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.sql.*;
-import java.util.ResourceBundle;
 
 public class ManageLecturerController {
 
+
     @FXML
-    private ListView<Lecturer> lecturerListView;
+    private TableView<Lecturer> lecturerTable;
+
+    @FXML
+    private TableColumn<Lecturer, Integer> idColumn;
+
+    @FXML
+    private TableColumn<Lecturer, String> nameColumn;
+
+    @FXML
+    private TableColumn<Lecturer, String> emailColumn;
 
 
     private Lecturer selectedLecturer;
 
 
-    @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        setupLecturerList();
+    @FXML
+    public void initialize() {
+
+
+        setupTable();
 
         loadLecturers();
 
 
-        lecturerListView.getSelectionModel()
+        lecturerTable.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
+                .addListener((obs, oldValue, newValue) -> {
 
                     selectedLecturer = newValue;
 
@@ -43,88 +53,73 @@ public class ManageLecturerController {
     }
 
 
-    private void setupLecturerList(){
 
-        lecturerListView.setCellFactory(param -> new ListCell<>() {
-
-            @Override
-            protected void updateItem(
-                    Lecturer lecturer,
-                    boolean empty
-            ){
-
-                super.updateItem(lecturer, empty);
+    private void setupTable(){
 
 
-                if(empty || lecturer == null){
+        idColumn.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
 
-                    setText(null);
 
-                }else{
+        nameColumn.setCellValueFactory(
+                new PropertyValueFactory<>("name")
+        );
 
-                    setText(
-                            lecturer.getName()
-                                    + " - "
-                                    + lecturer.getEmail()
-                    );
 
-                }
+        emailColumn.setCellValueFactory(
+                new PropertyValueFactory<>("email")
+        );
 
-            }
-
-        });
 
     }
 
 
 
+
     private void loadLecturers(){
 
+
         String sql = """
-                SELECT 
-                    id,
-                    username,
-                    email
-                FROM users
-                WHERE role = 'lecturer'
+                SELECT lecture_id,
+                       first_name,
+                       last_name,
+                       email
+                FROM lectures
                 """;
 
 
-        try(
-                Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()
-        ){
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()){
+
 
             while(rs.next()){
 
 
-                Lecturer lecturer = new Lecturer(
+                Lecturer lecturer =
+                        new Lecturer(
 
-                        rs.getInt("id"),
+                                rs.getInt("lecture_id"),
 
-                        rs.getString("username"),
+                                rs.getString("first_name")
+                                        + " "
+                                        + rs.getString("last_name"),
 
-                        rs.getString("email")
+                                rs.getString("email")
+                        );
 
-                );
 
-
-                lecturerListView
-                        .getItems()
+                lecturerTable.getItems()
                         .add(lecturer);
+
 
             }
 
 
-        }catch(SQLException e){
+        }catch(Exception e){
 
             e.printStackTrace();
-
-            showError(
-                    "Database Error",
-                    e.getMessage()
-            );
 
         }
 
@@ -139,32 +134,14 @@ public class ManageLecturerController {
 
         if(selectedLecturer == null){
 
-
-            Alert alert = new Alert(
-                    Alert.AlertType.WARNING
+            showError(
+                    "No Lecturer Selected",
+                    "Please select a lecturer first."
             );
-
-
-            alert.setTitle(
-                    "No Lecturer Selected"
-            );
-
-
-            alert.setHeaderText(null);
-
-
-            alert.setContentText(
-                    "Please select a lecturer before assigning modules."
-            );
-
-
-            alert.showAndWait();
-
 
             return;
 
         }
-
 
 
         try{
@@ -182,24 +159,18 @@ public class ManageLecturerController {
             Parent root = loader.load();
 
 
-
             AssignModulesController controller =
                     loader.getController();
 
 
-
-            controller.setLecturer(
-                    selectedLecturer
-            );
+            controller.setLecturer(selectedLecturer);
 
 
 
             Stage stage = new Stage();
 
 
-            stage.setTitle(
-                    "Assign Modules"
-            );
+            stage.setTitle("Assign Modules");
 
 
             stage.setScene(
@@ -219,49 +190,46 @@ public class ManageLecturerController {
 
     }
 
+
+
+
+
     @FXML
     private void handleAddLecturer(){
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle("Add Lecturer");
-        alert.setHeaderText(null);
-        alert.setContentText(
+        showInfo(
+                "Add Lecturer",
                 "Add lecturer feature coming soon."
         );
 
-        alert.showAndWait();
-
     }
+
+
 
 
 
     @FXML
     private void handleEditLecturer(){
 
+
         if(selectedLecturer == null){
 
             showError(
                     "No Lecturer Selected",
-                    "Please select a lecturer to edit."
+                    "Select a lecturer first."
             );
 
             return;
+
         }
 
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle("Edit Lecturer");
-
-        alert.setHeaderText(null);
-
-        alert.setContentText(
+        showInfo(
+                "Edit Lecturer",
                 "Editing: "
                         + selectedLecturer.getName()
         );
 
-        alert.showAndWait();
 
     }
 
@@ -272,11 +240,12 @@ public class ManageLecturerController {
     @FXML
     private void handleDeleteLecturer(){
 
+
         if(selectedLecturer == null){
 
             showError(
                     "No Lecturer Selected",
-                    "Please select a lecturer to delete."
+                    "Select a lecturer first."
             );
 
             return;
@@ -284,7 +253,9 @@ public class ManageLecturerController {
         }
 
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert =
+                new Alert(Alert.AlertType.CONFIRMATION);
+
 
         alert.setTitle("Delete Lecturer");
 
@@ -299,7 +270,10 @@ public class ManageLecturerController {
 
         alert.showAndWait();
 
+
     }
+
+
 
 
 
@@ -308,10 +282,30 @@ public class ManageLecturerController {
             String message
     ){
 
-        Alert alert = new Alert(
-                Alert.AlertType.ERROR
-        );
+        Alert alert =
+                new Alert(Alert.AlertType.ERROR);
 
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
+
+    }
+
+
+
+
+
+    private void showInfo(
+            String title,
+            String message
+    ){
+
+        Alert alert =
+                new Alert(Alert.AlertType.INFORMATION);
 
         alert.setTitle(title);
 

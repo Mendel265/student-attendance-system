@@ -8,46 +8,60 @@ public class Module {
     private String semester;
 
 
-    public Module(
-            int id,
-            String className,
-            String moduleName,
-            String semester
-    ) {
+    public Module() {
+    }
 
+
+    public Module(int id, String className, String moduleName, String semester) {
         this.id = id;
         this.className = className;
         this.moduleName = moduleName;
         this.semester = semester;
-
     }
 
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
 
-    public String getClassName(){
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public String getClassName() {
         return className;
     }
 
 
-    public String getModuleName(){
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+
+    public String getModuleName() {
         return moduleName;
     }
 
 
-    public String getSemester(){
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+
+    public String getSemester() {
         return semester;
     }
 
 
-    @Override
-    public String toString(){
-
-        return moduleName + " (" + className + ")";
-
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
+
+    @Override
+    public String toString() {
+        return moduleName + " (" + className + ")";
+    }
 }
