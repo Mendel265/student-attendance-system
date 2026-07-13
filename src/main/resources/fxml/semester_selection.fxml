@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <!-- SemesterSelection.fxml -->
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.SemesterSelectionController">
-    <VBox alignment="CENTER" spacing="20" prefWidth="400" prefHeight="300">
-        <Label fx:id="classLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-        <Button text="First Semester" onAction="#handleFirstSemester" prefWidth="200"/>
-        <Button text="Second Semester" onAction="#handleSecondSemester" prefWidth="200"/>
-    </VBox>
-</AnchorPane>
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.SemesterSelectionController"
+            prefWidth="440" prefHeight="360"
+            stylesheets="@../styles/semester_selection.css"
+            styleClass="semester-root">
 
+    <VBox alignment="CENTER" spacing="22"
+          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+
+        <VBox alignment="CENTER" spacing="24" styleClass="semester-card" maxWidth="320">
+            <padding>
+                <Insets top="34" right="32" bottom="34" left="32"/>
+            </padding>
+
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="Select Semester" styleClass="page-title"/>
+                <Label fx:id="classLabel" styleClass="class-pill"/>
+            </VBox>
+
+            <VBox spacing="12" fillWidth="true">
+                <Button text="1️⃣  First Semester" onAction="#handleFirstSemester"
+                        maxWidth="Infinity" styleClass="btn-semester"/>
+                <Button text="2️⃣  Second Semester" onAction="#handleSecondSemester"
+                        maxWidth="Infinity" styleClass="btn-semester"/>
+            </VBox>
+
+        </VBox>
+    </VBox>
+
+</AnchorPane>

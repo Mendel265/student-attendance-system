@@ -36,7 +36,7 @@ public class TakeAttendanceController {
 
     private VideoCapture capture;
     private CascadeClassifier faceDetector;
-    private boolean scanning = false;
+    private volatile boolean scanning = false;
 
     private final Map<Integer, String> studentNameMap = new HashMap<>();
     private final Map<Integer, String> studentIdMap = new HashMap<>(); // <label, student_id>
@@ -47,6 +47,17 @@ public class TakeAttendanceController {
     private final String password = "";
 
     private int lecturerId;
+
+    // ---- Session state ----
+    private enum SessionState {
+        IDLE, CHECK_IN_ACTIVE, CHECK_IN_CLOSED, CHECK_OUT_ACTIVE, COMPLETE
+    }
+
+    private SessionState state = SessionState.IDLE;
+
+    // students already marked in the *current* scanning session, to avoid duplicate DB writes
+    private final Set<String> sessionCheckIns = new HashSet<>();
+    private final Set<String> sessionCheckOuts = new HashSet<>();
 
     public void setLecturerId(int id) {
         this.lecturerId = id;
@@ -70,6 +81,9 @@ public class TakeAttendanceController {
             classComboBox.getItems().clear();
             loadClassesForSemesterAndModule();
         });
+
+        checkOutButton.setDisable(true); // can't check out before a check-in round has run
+        updateStatus("Idle — select a class to begin");
     }
 
     private void loadSemesters() {
@@ -171,6 +185,81 @@ public class TakeAttendanceController {
         }
     }
 
+    // ================= CHECK-IN =================
+
+    @FXML
+    private void onCheckIn() {
+        if (state == SessionState.IDLE || state == SessionState.CHECK_IN_CLOSED) {
+            startCheckInSession();
+        } else if (state == SessionState.CHECK_IN_ACTIVE) {
+            stopScanningSession();
+        }
+    }
+
+    private void startCheckInSession() {
+        if (classComboBox.getValue() == null || moduleComboBox.getValue() == null) {
+            showAlert("Missing Selection", "Please select semester, module and class first.");
+            return;
+        }
+
+        state = SessionState.CHECK_IN_ACTIVE;
+        sessionCheckIns.clear();
+        checkInButton.setText("⏹  Stop Check-In");
+        checkOutButton.setDisable(true);
+        setComboBoxesDisabled(true);
+
+        startFaceRecognition("pending");
+    }
+
+    // ================= CHECK-OUT =================
+
+    @FXML
+    private void onCheckOut() {
+        if (state == SessionState.CHECK_IN_CLOSED) {
+            startCheckOutSession();
+        } else if (state == SessionState.CHECK_OUT_ACTIVE) {
+            stopScanningSession();
+        }
+    }
+
+    private void startCheckOutSession() {
+        state = SessionState.CHECK_OUT_ACTIVE;
+        sessionCheckOuts.clear();
+        checkOutButton.setText("⏹  Stop Check-Out");
+        checkInButton.setDisable(true);
+
+        startFaceRecognition("present");
+    }
+
+    // ================= SHARED STOP HANDLER =================
+
+    private void stopScanningSession() {
+        scanning = false; // background thread will exit its loop and release the capture
+
+        if (state == SessionState.CHECK_IN_ACTIVE) {
+            state = SessionState.CHECK_IN_CLOSED;
+            checkInButton.setText("▶  Start Check-In");
+            checkOutButton.setDisable(false);
+            setComboBoxesDisabled(false);
+            updateStatus("Check-In closed — " + sessionCheckIns.size() + " student(s) marked in");
+
+        } else if (state == SessionState.CHECK_OUT_ACTIVE) {
+            state = SessionState.COMPLETE;
+            checkOutButton.setText("▶  Start Check-Out");
+            checkInButton.setDisable(false);
+            setComboBoxesDisabled(false);
+            updateStatus("Check-Out closed — " + sessionCheckOuts.size() + " student(s) marked out");
+        }
+    }
+
+    private void setComboBoxesDisabled(boolean disabled) {
+        semesterComboBox.setDisable(disabled);
+        moduleComboBox.setDisable(disabled);
+        classComboBox.setDisable(disabled);
+    }
+
+    // ================= FACE RECOGNITION LOOP =================
+
     private void startFaceRecognition(String statusToMark) {
         if (scanning) return;
         scanning = true;
@@ -183,6 +272,8 @@ public class TakeAttendanceController {
                 statusLabel.setText("Status: Camera not available.");
             });
             scanning = false;
+            // roll the UI back since the session never really started
+            Platform.runLater(this::stopScanningSession);
             return;
         }
 
@@ -211,16 +302,26 @@ public class TakeAttendanceController {
                         String studentId = studentIdMap.get(predictedLabel);
                         String studentName = studentNameMap.getOrDefault(predictedLabel, "Unknown");
 
-                        Platform.runLater(() -> {
-                            showAlert("Match Found", "Student: " + studentName + "\nConfidence: " + String.format("%.2f", conf));
-                            statusLabel.setText("Status: Attendance marked for " + studentName);
-                        });
+                        // only write to the DB once per student per session
+                        boolean alreadyMarked = statusToMark.equals("pending")
+                                ? sessionCheckIns.contains(studentId)
+                                : sessionCheckOuts.contains(studentId);
 
-                        markAttendance(studentId, statusToMark);
-                        scanning = false;
-                        break;
-                    } else {
-                        Platform.runLater(() -> statusLabel.setText("Status: Unknown face or low confidence (" + String.format("%.2f", conf) + ")"));
+                        if (!alreadyMarked) {
+                            if (statusToMark.equals("pending")) {
+                                sessionCheckIns.add(studentId);
+                            } else {
+                                sessionCheckOuts.add(studentId);
+                            }
+
+                            markAttendance(studentId, statusToMark);
+
+                            Platform.runLater(() -> updateStatus(
+                                    (statusToMark.equals("pending") ? "Checked in: " : "Checked out: ")
+                                            + studentName + " (" + String.format("%.0f", conf) + " conf)"
+                            ));
+                        }
+                        // no break — keep scanning so the next student can walk up
                     }
                 }
 
@@ -229,9 +330,6 @@ public class TakeAttendanceController {
             }
 
             capture.release();
-            if (scanning) {
-                Platform.runLater(() -> statusLabel.setText("Status: Scan ended without match."));
-            }
             scanning = false;
         });
 
@@ -253,7 +351,8 @@ public class TakeAttendanceController {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             if (status.equals("pending")) {
                 PreparedStatement insert = conn.prepareStatement(
-                        "INSERT INTO attendance (student_id, class_name, attendance_date, check_in_time, status, module, lecturer_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                        "INSERT INTO attendance (student_id, schedule_id, status, check_in_time)\n" +
+                                "VALUES (?, ?, ?, ?)"
                 );
                 insert.setString(1, studentId);
                 insert.setString(2, className);
@@ -275,6 +374,7 @@ public class TakeAttendanceController {
                 update.setDate(5, Date.valueOf(date));
 
                 if (update.executeUpdate() == 0) {
+                    // no matching pending row (e.g. student checked out without a check-in on record)
                     PreparedStatement insert = conn.prepareStatement(
                             "INSERT INTO attendance (student_id, class_name, attendance_date, check_out_time, status, module, lecturer_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
                     );
@@ -302,21 +402,15 @@ public class TakeAttendanceController {
         return new Image(new ByteArrayInputStream(byteArray));
     }
 
+    private void updateStatus(String message) {
+        statusLabel.setText("Status: " + message);
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    private void onCheckIn() {
-        startFaceRecognition("pending");
-    }
-
-    @FXML
-    private void onCheckOut() {
-        startFaceRecognition("present");
     }
 }

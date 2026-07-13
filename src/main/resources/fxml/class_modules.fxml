@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.ClassModulesController">
-    <VBox spacing="20" alignment="CENTER">
-        <padding>
-            <Insets bottom="20" left="20" right="20" top="20" />
-        </padding>
-        <Label fx:id="infoLabel" text="Modules for Class and Semester" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <?import javafx.scene.control.*?>
+        <?import javafx.scene.layout.*?>
+        <?import javafx.geometry.Insets?>
 
-        <Button text="View Modules" onAction="#handleViewModules"/>
-        <Button text="Add Module" onAction="#handleAddModule"/>
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.ClassModulesController"
+            prefWidth="440" prefHeight="340"
+            stylesheets="@../styles/class_modules.css"
+            styleClass="class-modules-root">
+
+    <VBox alignment="CENTER" spacing="22"
+          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+
+        <VBox spacing="24" alignment="CENTER" styleClass="modules-card" maxWidth="320">
+            <padding>
+                <Insets top="34" right="32" bottom="34" left="32"/>
+            </padding>
+
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="Modules" styleClass="eyebrow"/>
+                <Label fx:id="infoLabel" text="Modules for Class and Semester"
+                       styleClass="page-title" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+
+            <VBox spacing="12" fillWidth="true">
+                <Button text="📋  View Modules" onAction="#handleViewModules"
+                        maxWidth="Infinity" styleClass="btn-primary"/>
+                <Button text="➕  Add Module" onAction="#handleAddModule"
+                        maxWidth="Infinity" styleClass="btn-secondary"/>
+            </VBox>
+
+        </VBox>
     </VBox>
+
 </AnchorPane>

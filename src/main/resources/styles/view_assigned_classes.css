@@ -1,0 +1,51 @@
+/* ===================== ROOT ===================== */
+.assigned-root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== HEADER ===================== */
+.page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.lecturer-pill {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f46e5;
+    -fx-background-color: #eef2ff;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16 6 16;
+}
+
+/* ===================== LIST CARD ===================== */
+.list-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-padding: 6;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
+}
+
+.assigned-list {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+}
+
+.assigned-list .list-cell {
+    -fx-padding: 12 16 12 16;
+    -fx-font-size: 13px;
+    -fx-text-fill: #34495e;
+    -fx-background-color: transparent;
+}
+
+.assigned-list .list-cell:filled:hover {
+    -fx-background-color: #f4f6fb;
+}
+
+.assigned-list .list-cell:filled:selected {
+    -fx-background-color: #eef2ff;
+    -fx-text-fill: #4f46e5;
+    -fx-font-weight: bold;
+}

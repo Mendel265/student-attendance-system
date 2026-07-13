@@ -1,0 +1,70 @@
+
+/* ===================== ROOT ===================== */
+.admin-root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== TOP BAR ===================== */
+.topbar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 0 1 0;
+}
+
+.page-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.page-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+.btn-logout {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #dc2626;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 9 18 9 18;
+    -fx-cursor: hand;
+}
+
+.btn-logout:hover {
+    -fx-background-color: #fecaca;
+}
+
+/* ===================== CONTENT ===================== */
+.content-area {
+    -fx-background-color: transparent;
+}
+
+.nav-grid {
+    -fx-pref-width: 620;
+    -fx-max-width: 620;
+}
+
+/* ===================== ACTION CARDS ===================== */
+.action-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-pref-height: 130;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
+    -fx-border-color: transparent;
+}
+
+.action-card:hover {
+    -fx-background-color: #eef2ff;
+    -fx-border-color: #4f46e5;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+}

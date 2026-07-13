@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.studentattendance.CheckInController">
+
+
+    <VBox alignment="CENTER"
+          spacing="25"
+          AnchorPane.topAnchor="30"
+          AnchorPane.leftAnchor="40"
+          AnchorPane.rightAnchor="40">
+
+
+        <Label text="📷 Student Check-In"
+               styleClass="page-title"/>
+
+
+
+        <HBox spacing="15">
+
+
+            <ComboBox fx:id="semesterComboBox"
+                      promptText="Semester"/>
+
+
+            <ComboBox fx:id="moduleComboBox"
+                      promptText="Module"/>
+
+
+            <ComboBox fx:id="classComboBox"
+                      promptText="Class"/>
+
+
+        </HBox>
+
+
+
+        <ImageView fx:id="cameraView"
+                   fitWidth="650"
+                   fitHeight="420"/>
+
+
+
+        <Label fx:id="statusLabel"
+               text="Camera Ready"/>
+
+
+
+        <Button text="START SCAN"
+                onAction="#startScan"/>
+
+
+    </VBox>
+
+
+</AnchorPane>

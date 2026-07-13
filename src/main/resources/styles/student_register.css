@@ -1,0 +1,115 @@
+/* ===================== ROOT ===================== */
+.register-scroll {
+    -fx-background-color: #f4f6fb;
+    -fx-background: #f4f6fb;
+}
+
+.register-root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== HEADER ===================== */
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.page-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+/* ===================== CARDS ===================== */
+.form-card, .camera-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 26;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
+}
+
+.form-card {
+    -fx-pref-width: 380;
+}
+
+.camera-card {
+    -fx-pref-width: 340;
+}
+
+.card-heading {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+/* ===================== FORM FIELDS ===================== */
+.field-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+    -fx-font-weight: bold;
+}
+
+.text-input {
+    -fx-background-color: #f4f6fb;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-padding: 8 10 8 10;
+    -fx-font-size: 13px;
+}
+
+.text-input:focused {
+    -fx-border-color: #4f46e5;
+    -fx-background-color: #ffffff;
+}
+
+/* ===================== CAMERA ===================== */
+.camera-frame {
+    -fx-background-color: #1e1b4b;
+    -fx-background-radius: 14;
+    -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.18), 14, 0, 0, 5);
+}
+
+.camera-view {
+    -fx-background-radius: 10;
+}
+
+.camera-hint {
+    -fx-font-size: 11px;
+    -fx-text-fill: #9ca3af;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* ===================== BUTTONS ===================== */
+.btn-register {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 12 20 12 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(39,174,96,0.35), 10, 0, 0, 3);
+}
+
+.btn-register:hover {
+    -fx-background-color: #219150;
+}
+
+.btn-capture {
+    -fx-background-color: #2980b9;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 12 20 12 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(41,128,185,0.35), 10, 0, 0, 3);
+}
+
+.btn-capture:hover {
+    -fx-background-color: #216693;
+}

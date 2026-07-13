@@ -2,16 +2,65 @@
 
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.studentattendance.ManageLecturerController"
-      spacing="10" alignment="CENTER">
+      spacing="20" alignment="TOP_CENTER"
+      stylesheets="@../styles/manage_lecturers.css"
+      styleClass="manage-root">
+
     <padding>
-        <Insets bottom="20" left="20" right="20" top="20" />
+        <Insets top="30" right="36" bottom="30" left="36"/>
     </padding>
 
-    <ListView fx:id="lecturerListView" prefHeight="400" prefWidth="300" />
+    <!-- Header -->
+    <VBox alignment="CENTER" spacing="4">
+        <Label text="Manage Lecturers"
+               styleClass="page-title"/>
+
+        <Label text="View and manage all registered lecturers"
+               styleClass="page-subtitle"/>
+    </VBox>
+
+
+    <!-- Lecturer List -->
+    <VBox spacing="10"
+          styleClass="list-card"
+          VBox.vgrow="ALWAYS">
+
+        <ListView fx:id="lecturerListView"
+                  styleClass="lecturer-list"
+                  VBox.vgrow="ALWAYS"/>
+
+
+        <HBox alignment="CENTER_RIGHT"
+              spacing="15">
+
+            <Button text="➕ Add Lecturer"
+                    onAction="#handleAddLecturer"
+                    styleClass="btn-primary"/>
+
+
+            <Button text="Assign Module"
+                    onAction="#handleAssignModules"/>
+
+
+            <Button text="✏ Edit Lecturer"
+                    onAction="#handleEditLecturer"
+                    styleClass="btn-primary"/>
+
+
+            <Button text="🗑 Delete"
+                    onAction="#handleDeleteLecturer"
+                    styleClass="btn-danger"/>
+
+        </HBox>
+
+    </VBox>
 
 </VBox>

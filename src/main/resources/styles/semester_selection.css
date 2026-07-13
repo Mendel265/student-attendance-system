@@ -1,0 +1,48 @@
+/* ===================== ROOT ===================== */
+.semester-root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== CARD ===================== */
+.semester-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.10), 18, 0, 0, 6);
+}
+
+/* ===================== HEADER ===================== */
+.page-title {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.class-pill {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f46e5;
+    -fx-background-color: #eef2ff;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16 6 16;
+}
+
+/* ===================== BUTTONS ===================== */
+.btn-semester {
+    -fx-background-color: #f4f6fb;
+    -fx-text-fill: #1e1b4b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 14 20 14 20;
+    -fx-cursor: hand;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.btn-semester:hover {
+    -fx-background-color: #4f46e5;
+    -fx-text-fill: white;
+    -fx-border-color: #4f46e5;
+}

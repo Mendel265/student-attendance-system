@@ -1,0 +1,19 @@
+<TableView fx:id="scheduleTable">
+
+    <columns>
+
+        <TableColumn fx:id="courseCodeColumn"
+                     text="Course Code"/>
+
+        <TableColumn fx:id="courseNameColumn"
+                     text="Course Name"/>
+
+        <TableColumn fx:id="roomColumn"
+                     text="Room"/>
+
+        <TableColumn fx:id="timeColumn"
+                     text="Time"/>
+
+    </columns>
+
+</TableView>

@@ -8,19 +8,52 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="350" prefWidth="400" style="-fx-background-color: #ecf0f1;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.studentattendance.LoginController">
+<?import javafx.scene.layout.StackPane?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@../styles/login.css"
+            fx:controller="com.example.studentattendance.LoginController">
 
-    <VBox alignment="CENTER" layoutX="50" layoutY="40" prefWidth="300" spacing="15" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);" AnchorPane.bottomAnchor="40" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50" AnchorPane.topAnchor="40">
+<children>
 
-        <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Login" textFill="#0aae51" />
+    <StackPane AnchorPane.topAnchor="0"
+               AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0">
 
-        <TextField fx:id="usernameField" promptText="Username" style="-fx-pref-height: 40px; -fx-font-size: 14px;" />
+        <VBox fx:id="loginCard"
+              alignment="CENTER"
+              prefWidth="400"
+              maxWidth="480"
+              spacing="18"
+              styleClass="login-card">
 
-        <PasswordField fx:id="passwordField" promptText="Password" style="-fx-pref-height: 40px; -fx-font-size: 14px;" />
+            <Label text="Student Attendance System"
+                   styleClass="login-title"/>
 
-        <Button onAction="#handleLogin" style="-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 40px;" text="Login" />
+            <Label text="Secure Face Recognition Platform"
+                   styleClass="login-subtitle"/>
 
-        <Hyperlink onAction="#goToSignup" style="-fx-text-fill: green; -fx-font-size: 13px;" text="Don't have an account? Sign Up" />
+            <TextField fx:id="usernameField"
+                       promptText="Username"
+                       styleClass="input-field"/>
 
-    </VBox>
+            <PasswordField fx:id="passwordField"
+                           promptText="Password"
+                           styleClass="input-field"/>
+
+            <Button text="SIGN IN"
+                    onAction="#handleLogin"
+                    styleClass="primary-button"/>
+
+            <Hyperlink text="Don't have an account? Sign Up"
+                       onAction="#goToSignup"
+                       styleClass="signup-link"/>
+
+        </VBox>
+
+    </StackPane>
+
+</children>
+
 </AnchorPane>

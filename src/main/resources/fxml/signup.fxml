@@ -2,27 +2,60 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.studentattendance.SignUpController"
-      spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+      alignment="CENTER"
+      stylesheets="@../styles/signup.css"
+      styleClass="signup-root">
 
-    <Label text="Sign Up" style="-fx-font-size: 20px;" />
+    <VBox spacing="20" alignment="CENTER" styleClass="signup-card" maxWidth="360">
+        <padding>
+            <Insets top="36" right="34" bottom="30" left="34"/>
+        </padding>
 
-    <TextField fx:id="usernameField" promptText="Username" />
-    <PasswordField fx:id="passwordField" promptText="Password" />
+        <!-- Brand -->
+        <StackPane styleClass="brand-badge">
+            <Circle radius="26"/>
+            <Label text="🎓" styleClass="brand-icon"/>
+        </StackPane>
 
-    <ComboBox fx:id="roleComboBox" promptText="Select Role">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="admin" />
-                <String fx:value="lecturer" />
-            </FXCollections>
-        </items>
-    </ComboBox>
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Create Account" styleClass="page-title"/>
+            <Label text="Sign up to access Smart Attendance" styleClass="page-subtitle"/>
+        </VBox>
 
-    <Button text="Register" onAction="#handleSignup" />
-    <Hyperlink text="Back to Login" onAction="#goToLogin" />
+        <!-- Form -->
+        <VBox spacing="14" fillWidth="true">
+            <VBox spacing="5">
+                <Label text="Username" styleClass="field-caption"/>
+                <TextField fx:id="usernameField" promptText="Choose a username" styleClass="text-input"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Password" styleClass="field-caption"/>
+                <PasswordField fx:id="passwordField" promptText="Create a password" styleClass="text-input"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Role" styleClass="field-caption"/>
+                <ComboBox fx:id="roleComboBox" promptText="Select Role" maxWidth="Infinity" styleClass="dropdown">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="admin" />
+                            <String fx:value="lecturer" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+        </VBox>
+
+        <Button text="Register" onAction="#handleSignup" maxWidth="Infinity" styleClass="btn-register"/>
+
+        <Hyperlink text="Back to Login" onAction="#goToLogin" styleClass="link-back"/>
+
+    </VBox>
 </VBox>

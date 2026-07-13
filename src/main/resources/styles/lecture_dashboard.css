@@ -1,0 +1,170 @@
+/* ===================== BASE ===================== */
+.dashboard {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+    -fx-background-color: #1e1b4b;
+    -fx-padding: 0 0 20 0;
+}
+
+.sidebar-brand {
+    -fx-padding: 24 20 24 20;
+}
+
+.logo-icon {
+    -fx-font-size: 20px;
+}
+
+.logo {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.nav-group {
+    -fx-padding: 10 12 10 12;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #c7c9f2;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 16 12 16;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #2e2a6b;
+    -fx-text-fill: #ffffff;
+}
+
+.nav-button-active {
+    -fx-background-color: #4f46e5;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.sidebar-footer {
+    -fx-padding: 10 12 0 12;
+}
+
+.logout-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f87171;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 16 12 16;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-border-color: #3b3675;
+    -fx-border-width: 1 0 0 0;
+}
+
+.logout-button:hover {
+    -fx-background-color: #3b1d2e;
+}
+
+/* ===================== TOP BAR ===================== */
+.topbar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 0 1 0;
+}
+
+.page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.page-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+.profile-avatar {
+    -fx-alignment: center;
+}
+
+.profile-avatar Circle {
+    -fx-fill: #4f46e5;
+}
+
+.profile-initials {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* ===================== CONTENT ===================== */
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.content-area {
+    -fx-background-color: transparent;
+}
+
+.welcome {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+/* ===================== STAT CARDS ===================== */
+.stat-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 22;
+    -fx-spacing: 6;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
+}
+
+.stat-icon {
+    -fx-font-size: 20px;
+}
+
+.stat-number {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+/* ===================== QUICK ACTION CARDS ===================== */
+.action-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 24 16 24 16;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
+    -fx-border-color: transparent;
+}
+
+.action-card:hover {
+    -fx-background-color: #eef2ff;
+    -fx-border-color: #4f46e5;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+}

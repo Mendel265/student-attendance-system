@@ -3,27 +3,44 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
 
-<VBox spacing="20" alignment="CENTER"
-      xmlns="http://javafx.com/javafx/8"
+<VBox spacing="0" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.studentattendance.TrainFaceModelController"
-      style="-fx-background-color: #f4f7fa; -fx-padding: 40;">
+      stylesheets="@../styles/train_model.css"
+      styleClass="train-root">
 
-    <!-- Title Label -->
-    <Label text=" Train Face Recognition Model"
-           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+    <VBox spacing="20" alignment="CENTER" styleClass="train-card" maxWidth="420">
+        <padding>
+            <Insets top="36" right="36" bottom="36" left="36"/>
+        </padding>
 
-    <!-- Train Button -->
-    <Button fx:id="trainButton"
-            text=" Train Model"
-            onAction="#trainModel"
-            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 160px;" />
+        <!-- Icon -->
+        <StackPane styleClass="icon-badge">
+            <Circle radius="34"/>
+            <Label text="🧠" styleClass="icon-label"/>
+        </StackPane>
 
-    <!-- Status Label -->
-    <Label fx:id="statusLabel"
-           text="Status: Waiting to start..."
-           style="-fx-font-size: 14px; -fx-text-fill: #34495e;" />
+        <!-- Title -->
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Train Face Recognition Model" styleClass="page-title" wrapText="true" textAlignment="CENTER"/>
+            <Label text="Rebuilds the recognizer using all registered student faces"
+                   styleClass="page-subtitle" wrapText="true" textAlignment="CENTER"/>
+        </VBox>
+
+        <!-- Train Button -->
+        <Button fx:id="trainButton" text="⚙  Train Model" onAction="#trainModel"
+                maxWidth="Infinity" styleClass="btn-train"/>
+
+        <!-- Status -->
+        <StackPane styleClass="status-pill">
+            <Label fx:id="statusLabel" text="Status: Waiting to start..." styleClass="status-label"/>
+        </StackPane>
+
+    </VBox>
 
 </VBox>

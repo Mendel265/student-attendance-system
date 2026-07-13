@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+        <?import javafx.scene.control.*?>
+        <?import javafx.scene.layout.*?>
+        <?import javafx.geometry.Insets?>
 
-<?import javafx.geometry.Insets?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.studentattendance.ViewAssignedClassesController">
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.ViewAssignedClassesController"
+            prefWidth="680" prefHeight="560"
+            stylesheets="@../styles/view_assigned_classes.css"
+            styleClass="assigned-root">
+
     <center>
-        <VBox spacing="10" alignment="CENTER">
+        <VBox spacing="18" alignment="TOP_CENTER">
             <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
+                <Insets top="30" right="40" bottom="30" left="40"/>
             </padding>
 
-            <!-- Add this label to show the lecturer's name -->
-            <Label fx:id="lecturerLabel" text="Lecturer: " style="-fx-font-size: 14px;" />
+            <!-- Header -->
+            <VBox alignment="CENTER" spacing="6">
+                <Label text="Assigned Classes and Modules" styleClass="page-title"/>
+                <Label fx:id="lecturerLabel" text="Lecturer: " styleClass="lecturer-pill"/>
+            </VBox>
 
-            <Label text="Assigned Classes and Modules" style="-fx-font-size: 16px;" />
-            <ListView fx:id="assignedListView" prefHeight="400" prefWidth="600"/>
+            <!-- List Card -->
+            <VBox spacing="0" styleClass="list-card" VBox.vgrow="ALWAYS">
+                <ListView fx:id="assignedListView" VBox.vgrow="ALWAYS" styleClass="assigned-list"/>
+            </VBox>
+
         </VBox>
     </center>
+
 </BorderPane>

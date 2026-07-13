@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane fx:controller="com.example.studentattendance.ManageClassesController" xmlns:fx="http://javafx.com/fxml">
-    <VBox spacing="10" alignment="TOP_CENTER">
+<AnchorPane fx:controller="com.example.studentattendance.ManageClassesController"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="640" prefHeight="520"
+            stylesheets="@../styles/manage_classes.css"
+            styleClass="manage-root">
+
+    <VBox spacing="20" alignment="TOP_CENTER"
+          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+
         <padding>
-            <Insets bottom="20" left="20" right="20" top="20" />
+            <Insets top="30" right="36" bottom="30" left="36"/>
         </padding>
-        <Label text="Manage Classes" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-        <ListView fx:id="classListView" prefHeight="400"/>
+
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Manage Classes" styleClass="page-title"/>
+            <Label text="View and manage all classes under your modules" styleClass="page-subtitle"/>
+        </VBox>
+
+        <!-- List Card -->
+        <VBox spacing="0" styleClass="list-card" VBox.vgrow="ALWAYS">
+            <ListView fx:id="classListView" VBox.vgrow="ALWAYS" styleClass="class-list"/>
+        </VBox>
+
     </VBox>
 </AnchorPane>

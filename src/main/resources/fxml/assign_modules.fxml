@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.studentattendance.AssignModulesController">
+
+    <top>
+
+        <VBox spacing="8">
+
+            <padding>
+                <Insets top="20"
+                        right="25"
+                        bottom="20"
+                        left="25"/>
+            </padding>
+
+            <Label fx:id="lecturerLabel"
+                   text="Assign Modules"
+                   styleClass="page-title"/>
+
+        </VBox>
+
+    </top>
+
+    <center>
+
+        <VBox spacing="15">
+
+            <padding>
+                <Insets top="20"
+                        right="25"
+                        bottom="20"
+                        left="25"/>
+            </padding>
+
+            <Label text="Available Modules"
+                   styleClass="page-subtitle"/>
+
+            <ListView fx:id="moduleListView"
+                      prefHeight="300"/>
+
+        </VBox>
+    </center>
+
+    <bottom>
+
+        <HBox alignment="CENTER_RIGHT"
+              spacing="15">
+
+            <padding>
+                <Insets top="10"
+                        right="25"
+                        bottom="20"
+                        left="25"/>
+            </padding>
+
+            <Button text="Save Assignment"
+                    onAction="#handleSave"
+                    styleClass="btn-primary"/>
+
+        </HBox>
+    </bottom>
+</BorderPane>

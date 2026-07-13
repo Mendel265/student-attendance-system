@@ -1,0 +1,108 @@
+/* ===================== ROOT ===================== */
+.assign-root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== HEADER ===================== */
+.page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.lecturer-pill {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f46e5;
+    -fx-background-color: #eef2ff;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16 6 16;
+}
+
+/* ===================== SELECTOR CARD ===================== */
+.selector-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-padding: 16 20 16 20;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 10, 0, 0, 3);
+}
+
+.field-caption {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9ca3af;
+}
+
+.dropdown {
+    -fx-background-color: #f4f6fb;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+}
+
+.btn-load {
+    -fx-background-color: #4f46e5;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.btn-load:hover {
+    -fx-background-color: #4338ca;
+}
+
+/* ===================== MODULE LIST ===================== */
+.section-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.list-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-padding: 6;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
+}
+
+.module-list {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+}
+
+.module-list .list-cell {
+    -fx-padding: 12 16 12 16;
+    -fx-font-size: 13px;
+    -fx-text-fill: #34495e;
+    -fx-background-color: transparent;
+}
+
+.module-list .list-cell:filled:hover {
+    -fx-background-color: #f4f6fb;
+}
+
+.module-list .list-cell:filled:selected {
+    -fx-background-color: #eef2ff;
+    -fx-text-fill: #4f46e5;
+    -fx-font-weight: bold;
+}
+
+/* ===================== ASSIGN BUTTON ===================== */
+.btn-assign {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 13 20 13 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(39,174,96,0.35), 10, 0, 0, 3);
+}
+
+.btn-assign:hover {
+    -fx-background-color: #219150;
+}

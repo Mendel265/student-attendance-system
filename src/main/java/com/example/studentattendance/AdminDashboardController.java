@@ -3,10 +3,13 @@ package com.example.studentattendance;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+
+import java.io.IOException;
 
 public class AdminDashboardController {
 
@@ -48,6 +51,26 @@ public class AdminDashboardController {
     public void handleViewReports(ActionEvent event) {
         System.out.println("View Attendance Reports clicked");
         // TODO: Load Attendance Reports screen
+    }
+
+    @FXML
+    private void handleManageSchedule(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/admin_schedule.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Manage Lecture Schedule");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleLogout(ActionEvent event) {

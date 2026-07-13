@@ -4,31 +4,51 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
 
-<VBox xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.studentattendance.LecturerActionsController"
-      spacing="20"
-      alignment="CENTER">
+      spacing="0" alignment="TOP_CENTER"
+      stylesheets="@../styles/lecturer_actions.css"
+      styleClass="actions-root">
+
     <padding>
-        <Insets bottom="30" left="30" right="30" top="30" />
+        <Insets top="40" right="36" bottom="40" left="36"/>
     </padding>
 
-    <Label fx:id="lecturerNameLabel"
-           text="Actions for: [Lecturer Name]"
-           style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+    <VBox spacing="24" alignment="CENTER" styleClass="actions-card" maxWidth="380">
+        <padding>
+            <Insets top="32" right="32" bottom="32" left="32"/>
+        </padding>
 
-    <Button fx:id="viewAssignedClassesButton"
-            text="View Assigned Classes and Modules"
-            onAction="#handleViewAssignedClasses"
-            maxWidth="250"
-            style="-fx-font-size: 14px;" />
+        <!-- Lecturer Identity -->
+        <StackPane styleClass="avatar-badge">
+            <Circle radius="30"/>
+            <Label text="👤" styleClass="avatar-icon"/>
+        </StackPane>
 
-    <Button fx:id="assignClassAndModulesButton"
-            text="Assign to Class and Modules"
-            onAction="#handleAssignClassAndModules"
-            maxWidth="250"
-            style="-fx-font-size: 14px;" />
+        <VBox alignment="CENTER" spacing="2">
+            <Label text="Lecturer" styleClass="eyebrow"/>
+            <Label fx:id="lecturerNameLabel" text="[Lecturer Name]" styleClass="lecturer-name" wrapText="true" textAlignment="CENTER"/>
+        </VBox>
+
+        <!-- Actions -->
+        <VBox spacing="12" VBox.vgrow="ALWAYS">
+            <Button fx:id="viewAssignedClassesButton"
+                    text="📋  View Assigned Classes &amp; Modules"
+                    onAction="#handleViewAssignedClasses"
+                    maxWidth="Infinity"
+                    styleClass="btn-primary"/>
+
+            <Button fx:id="assignClassAndModulesButton"
+                    text="➕  Assign to Class &amp; Modules"
+                    onAction="#handleAssignClassAndModules"
+                    maxWidth="Infinity"
+                    styleClass="btn-secondary"/>
+        </VBox>
+
+    </VBox>
 
 </VBox>
-

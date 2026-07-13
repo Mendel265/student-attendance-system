@@ -5,57 +5,79 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Pos?>
+<?import javafx.scene.control.ScrollPane?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.studentattendance.StudentRegisterController"
-      spacing="20"
-      alignment="TOP_CENTER"
-      style="-fx-background-color: #f4f6f9; -fx-padding: 30;">
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.StudentRegisterController"
+            fitToWidth="true"
+            stylesheets="@../styles/student_register.css"
+            styleClass="register-scroll">
 
-    <!-- Title -->
-    <Label text="Register Student"
-           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-
-    <!-- Form Fields -->
-    <GridPane hgap="15" vgap="15">
+    <VBox spacing="24" alignment="TOP_CENTER" styleClass="register-root">
         <padding>
-            <Insets top="10" right="20" bottom="10" left="20"/>
+            <Insets top="36" right="40" bottom="40" left="40"/>
         </padding>
 
-        <Label text="First Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="fnameField" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                   style="-fx-pref-width: 250px;"/>
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Register Student" styleClass="page-title"/>
+            <Label text="Add a new student and capture their face for recognition" styleClass="page-subtitle"/>
+        </VBox>
 
-        <Label text="Last Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="lnameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <HBox spacing="28" alignment="TOP_CENTER" styleClass="register-layout">
 
-        <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <TextField fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <!-- ===== Form Card ===== -->
+            <VBox spacing="18" styleClass="form-card">
+                <Label text="Student Details" styleClass="card-heading"/>
 
-        <Label text="Class:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <TextField fx:id="classField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <GridPane hgap="16" vgap="16" styleClass="form-grid">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="110"/>
+                        <ColumnConstraints minWidth="220" hgrow="ALWAYS"/>
+                    </columnConstraints>
 
-        <Label text="Student ID:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <TextField fx:id="studentIdField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-    </GridPane>
+                    <Label text="First Name" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="fnameField" promptText="e.g. Mendel" styleClass="text-input"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-    <!-- Camera Preview -->
-    <ImageView fx:id="cameraView"
-               fitWidth="320" fitHeight="240" preserveRatio="true"
-               style="-fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);"/>
+                    <Label text="Last Name" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="lnameField" promptText="e.g. Banda" styleClass="text-input"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <!-- Buttons -->
-    <HBox spacing="20" alignment="CENTER">
-        <Button fx:id="captureButton"
-                text="Capture Face"
-                onAction="#handleCaptureFace"
-                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+                    <Label text="Email" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="emailField" promptText="student@dyuni.ac.mw" styleClass="text-input"
+                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <Button fx:id="registerButton"
-                text="Register Student"
-                onAction="#handleRegisterStudent"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
-    </HBox>
+                    <Label text="Class" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="classField" promptText="e.g. BSc IT 3A" styleClass="text-input"
+                               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-</VBox>
+                    <Label text="Student ID" styleClass="field-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="studentIdField" promptText="e.g. BIT2023001" styleClass="text-input"
+                               GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <Button fx:id="registerButton" text="✔  Register Student" onAction="#handleRegisterStudent"
+                        maxWidth="Infinity" styleClass="btn-register"/>
+            </VBox>
+
+            <!-- ===== Camera Card ===== -->
+            <VBox spacing="16" alignment="CENTER" styleClass="camera-card">
+                <Label text="Face Capture" styleClass="card-heading"/>
+
+                <StackPane styleClass="camera-frame">
+                    <ImageView fx:id="cameraView" fitWidth="300" fitHeight="240" preserveRatio="true"
+                               styleClass="camera-view"/>
+                </StackPane>
+
+                <Label text="Position the student's face in view, then capture" styleClass="camera-hint"/>
+
+                <Button fx:id="captureButton" text="📷  Capture Face" onAction="#handleCaptureFace"
+                        maxWidth="Infinity" styleClass="btn-capture"/>
+            </VBox>
+
+        </HBox>
+
+    </VBox>
+</ScrollPane>

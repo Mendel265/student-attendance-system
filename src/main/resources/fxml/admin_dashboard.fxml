@@ -5,30 +5,74 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.ColumnConstraints?>
 
-<BorderPane prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.studentattendance.AdminDashboardController">
+<BorderPane prefHeight="560" prefWidth="760"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.AdminDashboardController"
+            stylesheets="@../styles/admin_dashboard.css"
+            styleClass="admin-root">
 
     <!-- Top: Header -->
     <top>
-        <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-padding: 20px;" text="Admin Dashboard" BorderPane.alignment="CENTER" />
-    </top>
-
-    <!-- Center: Navigation Buttons -->
-    <center>
-        <VBox alignment="CENTER" spacing="20">
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="topbar">
             <padding>
-                <Insets bottom="30" left="50" right="50" top="30" />
+                <Insets top="20" right="36" bottom="20" left="36"/>
             </padding>
 
-            <Button onAction="#handleManageLecturers" style="-fx-font-size: 16px; -fx-pref-width: 250px;" text=" Manage Lecturers" />
+            <VBox spacing="4">
+                <Label text="Admin Dashboard" styleClass="page-title"/>
+                <Label text="Manage lecturers, students, classes and reports" styleClass="page-subtitle"/>
+            </VBox>
 
-            <Button onAction="#handleManageStudents" style="-fx-font-size: 16px; -fx-pref-width: 250px;" text="  Manage Students" />
+            <Region HBox.hgrow="ALWAYS"/>
 
-            <Button onAction="#handleManageClasses" style="-fx-font-size: 16px; -fx-pref-width: 250px;" text=" Manage Classes" />
+            <Button text="⎋  Logout" onAction="#handleLogout" styleClass="btn-logout"/>
+        </HBox>
+    </top>
 
-            <Button onAction="#handleViewReports" style="-fx-font-size: 16px; -fx-pref-width: 250px;" text=" View Attendance Reports" />
+    <!-- Center: Navigation Cards -->
+    <center>
+        <VBox alignment="TOP_CENTER" styleClass="content-area">
+            <padding>
+                <Insets top="30" right="50" bottom="40" left="50"/>
+            </padding>
 
-            <Button onAction="#handleLogout" style="-fx-font-size: 16px; -fx-pref-width: 250px; -fx-background-color: red; -fx-text-fill: white;" text=" Logout" />
+            <GridPane hgap="20" vgap="20" styleClass="nav-grid">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <Button text="👨‍🏫&#10;Manage Lecturers" onAction="#handleManageLecturers"
+                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
+                        GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+
+                <Button text="🎓&#10;Manage Students" onAction="#handleManageStudents"
+                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
+                        GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Button text="🏫&#10;Manage Classes" onAction="#handleManageClasses"
+                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
+                        GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+
+                <Button text="📊&#10;View Attendance Reports" onAction="#handleViewReports"
+                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
+                        GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Button text="📅&#10;Manage Lecture Schedule"
+                        onAction="#handleManageSchedule"
+                        styleClass="action-card"
+                        maxWidth="Infinity"
+                        maxHeight="Infinity"
+                        GridPane.rowIndex="2"
+                        GridPane.columnIndex="0"/>
+            </GridPane>
+
         </VBox>
     </center>
+
 </BorderPane>

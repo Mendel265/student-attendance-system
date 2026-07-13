@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-
 <?import javafx.geometry.Insets?>
-<AnchorPane fx:controller="com.example.studentattendance.AddModulesController" xmlns:fx="http://javafx.com/fxml">
-    <VBox spacing="10" alignment="TOP_CENTER" >
-        <padding>
-            <Insets bottom="20" left="20" right="20" top="20" />
-        </padding>
 
-        <Label fx:id="classLabel" style="-fx-font-size: 18px; -fx-font-weight: bold" />
-        <TextField fx:id="moduleNameField" promptText="Enter Module Name" />
-        <Button text="Add Module" onAction="#handleAddModule" />
-        <!-- Add module management UI later here -->
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.AddModulesController"
+            prefWidth="440" prefHeight="360"
+            stylesheets="@../styles/add_modules.css"
+            styleClass="add-modules-root">
+
+    <VBox alignment="CENTER" spacing="22"
+          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+
+        <VBox spacing="20" alignment="CENTER" styleClass="module-card" maxWidth="320">
+            <padding>
+                <Insets top="34" right="32" bottom="34" left="32"/>
+            </padding>
+
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="Add Module" styleClass="eyebrow"/>
+                <Label fx:id="classLabel" styleClass="page-title" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+
+            <VBox spacing="6" fillWidth="true">
+                <Label text="Module Name" styleClass="field-caption"/>
+                <TextField fx:id="moduleNameField" promptText="e.g. Data Structures" styleClass="text-input"/>
+            </VBox>
+
+            <Button text="➕  Add Module" onAction="#handleAddModule"
+                    maxWidth="Infinity" styleClass="btn-add"/>
+
+            <!-- Add module management UI later here -->
+        </VBox>
     </VBox>
+
 </AnchorPane>

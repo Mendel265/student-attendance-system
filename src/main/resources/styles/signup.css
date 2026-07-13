@@ -1,0 +1,87 @@
+/* ===================== ROOT ===================== */
+.signup-root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ===================== CARD ===================== */
+.signup-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.10), 20, 0, 0, 6);
+}
+
+/* ===================== BRAND ===================== */
+.brand-badge Circle {
+    -fx-fill: #eef2ff;
+}
+
+.brand-icon {
+    -fx-font-size: 22px;
+}
+
+/* ===================== HEADER ===================== */
+.page-title {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.page-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+/* ===================== FORM ===================== */
+.field-caption {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+}
+
+.text-input {
+    -fx-background-color: #f4f6fb;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-padding: 9 12 9 12;
+    -fx-font-size: 13px;
+}
+
+.text-input:focused {
+    -fx-border-color: #4f46e5;
+    -fx-background-color: #ffffff;
+}
+
+.dropdown {
+    -fx-background-color: #f4f6fb;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+}
+
+/* ===================== BUTTON ===================== */
+.btn-register {
+    -fx-background-color: #4f46e5;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 12 20 12 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,70,229,0.30), 8, 0, 0, 3);
+}
+
+.btn-register:hover {
+    -fx-background-color: #4338ca;
+}
+
+/* ===================== LINK ===================== */
+.link-back {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4f46e5;
+}
+
+.link-back:visited {
+    -fx-text-fill: #4f46e5;
+}

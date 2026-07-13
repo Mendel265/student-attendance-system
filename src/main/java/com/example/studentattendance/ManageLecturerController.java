@@ -1,66 +1,326 @@
 package com.example.studentattendance;
 
+import com.example.studentattendance.database.DBConnection;
+import com.example.studentattendance.models.Lecturer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
+import java.net.URL;
 import java.sql.*;
+import java.util.ResourceBundle;
 
 public class ManageLecturerController {
 
     @FXML
-    private ListView<String> lecturerListView;
+    private ListView<Lecturer> lecturerListView;
+
+
+    private Lecturer selectedLecturer;
+
 
     @FXML
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        setupLecturerList();
+
         loadLecturers();
 
-        lecturerListView.setOnMouseClicked(this::handleLecturerClick);
+
+        lecturerListView.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+
+                    selectedLecturer = newValue;
+
+                });
+
     }
 
-    private void loadLecturers() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/students_attendance", "root", "");
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT id, username FROM users WHERE role = 'lecturer'")
-        ) {
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("username");
-                lecturerListView.getItems().add(id + ": " + name);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void handleLecturerClick(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-            String selected = lecturerListView.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                // Extract ID and Name
-                String[] parts = selected.split(":");
-                int lecturerId = Integer.parseInt(parts[0].trim());
-                String lecturerName = parts[1].trim();
+    private void setupLecturerList(){
 
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lecturer_actions.fxml"));
-                    Parent root = loader.load();
+        lecturerListView.setCellFactory(param -> new ListCell<>() {
 
-                    LecturerActionsController controller = loader.getController();
-                    controller.setLecturerData(lecturerId, lecturerName);
+            @Override
+            protected void updateItem(
+                    Lecturer lecturer,
+                    boolean empty
+            ){
 
-                    Stage stage = new Stage();
-                    stage.setTitle("Lecturer Actions");
-                    stage.setScene(new Scene(root));
-                    stage.show();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                super.updateItem(lecturer, empty);
+
+
+                if(empty || lecturer == null){
+
+                    setText(null);
+
+                }else{
+
+                    setText(
+                            lecturer.getName()
+                                    + " - "
+                                    + lecturer.getEmail()
+                    );
+
                 }
+
             }
+
+        });
+
+    }
+
+
+
+    private void loadLecturers(){
+
+        String sql = """
+                SELECT 
+                    id,
+                    username,
+                    email
+                FROM users
+                WHERE role = 'lecturer'
+                """;
+
+
+        try(
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ){
+
+            while(rs.next()){
+
+
+                Lecturer lecturer = new Lecturer(
+
+                        rs.getInt("id"),
+
+                        rs.getString("username"),
+
+                        rs.getString("email")
+
+                );
+
+
+                lecturerListView
+                        .getItems()
+                        .add(lecturer);
+
+            }
+
+
+        }catch(SQLException e){
+
+            e.printStackTrace();
+
+            showError(
+                    "Database Error",
+                    e.getMessage()
+            );
+
         }
+
+    }
+
+
+
+
+    @FXML
+    private void handleAssignModules(){
+
+
+        if(selectedLecturer == null){
+
+
+            Alert alert = new Alert(
+                    Alert.AlertType.WARNING
+            );
+
+
+            alert.setTitle(
+                    "No Lecturer Selected"
+            );
+
+
+            alert.setHeaderText(null);
+
+
+            alert.setContentText(
+                    "Please select a lecturer before assigning modules."
+            );
+
+
+            alert.showAndWait();
+
+
+            return;
+
+        }
+
+
+
+        try{
+
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass()
+                                    .getResource(
+                                            "/fxml/assign_modules.fxml"
+                                    )
+                    );
+
+
+            Parent root = loader.load();
+
+
+
+            AssignModulesController controller =
+                    loader.getController();
+
+
+
+            controller.setLecturer(
+                    selectedLecturer
+            );
+
+
+
+            Stage stage = new Stage();
+
+
+            stage.setTitle(
+                    "Assign Modules"
+            );
+
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
+
+            stage.show();
+
+
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    @FXML
+    private void handleAddLecturer(){
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Add Lecturer");
+        alert.setHeaderText(null);
+        alert.setContentText(
+                "Add lecturer feature coming soon."
+        );
+
+        alert.showAndWait();
+
+    }
+
+
+
+    @FXML
+    private void handleEditLecturer(){
+
+        if(selectedLecturer == null){
+
+            showError(
+                    "No Lecturer Selected",
+                    "Please select a lecturer to edit."
+            );
+
+            return;
+        }
+
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Edit Lecturer");
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(
+                "Editing: "
+                        + selectedLecturer.getName()
+        );
+
+        alert.showAndWait();
+
+    }
+
+
+
+
+
+    @FXML
+    private void handleDeleteLecturer(){
+
+        if(selectedLecturer == null){
+
+            showError(
+                    "No Lecturer Selected",
+                    "Please select a lecturer to delete."
+            );
+
+            return;
+
+        }
+
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alert.setTitle("Delete Lecturer");
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(
+                "Delete "
+                        + selectedLecturer.getName()
+                        + "?"
+        );
+
+
+        alert.showAndWait();
+
+    }
+
+
+
+    private void showError(
+            String title,
+            String message
+    ){
+
+        Alert alert = new Alert(
+                Alert.AlertType.ERROR
+        );
+
+
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
+
     }
 
 }
