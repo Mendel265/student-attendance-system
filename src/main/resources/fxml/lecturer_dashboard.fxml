@@ -10,11 +10,12 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
-
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.chart.PieChart?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             stylesheets="@../styles/lecture_dashboard.css"
@@ -27,24 +28,58 @@
 
             <!-- Logo / Brand -->
             <HBox styleClass="sidebar-brand" alignment="CENTER_LEFT" spacing="10">
-                <Label text="🎓" styleClass="logo-icon"/>
+                <FontIcon iconLiteral="fas-graduation-cap" styleClass="logo-icon"/>
                 <Label text="Smart Attendance" styleClass="logo"/>
             </HBox>
 
             <!-- Nav links -->
             <VBox styleClass="nav-group" spacing="4">
-                <Button text="🏠  Dashboard" styleClass="nav-button, nav-button-active" maxWidth="Infinity"/>
-                <Button text="👥  Students" styleClass="nav-button" maxWidth="Infinity"/>
-                <Button text="📷  Attendance" onAction="#handleTakeAttendance" styleClass="nav-button" maxWidth="Infinity"/>
-                <Button text="🧠  Train Model" onAction="#handleTrainModel" styleClass="nav-button" maxWidth="Infinity"/>
-                <Button text="📊  Reports" onAction="#onPrintAttendance" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button styleClass="nav-button, nav-button-active" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-home" styleClass="nav-icon"/>
+                    </graphic>
+                    <text>Dashboard</text>
+                </Button>
+
+                <Button styleClass="nav-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-users" styleClass="nav-icon"/>
+                    </graphic>
+                    <text>Students</text>
+                </Button>
+
+                <Button onAction="#handleTakeAttendance" styleClass="nav-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-camera" styleClass="nav-icon"/>
+                    </graphic>
+                    <text>Attendance</text>
+                </Button>
+
+                <Button onAction="#handleTrainModel" styleClass="nav-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-brain" styleClass="nav-icon"/>
+                    </graphic>
+                    <text>Train Model</text>
+                </Button>
+
+                <Button onAction="#onPrintAttendance" styleClass="nav-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-chart-bar" styleClass="nav-icon"/>
+                    </graphic>
+                    <text>Reports</text>
+                </Button>
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>
 
             <!-- Footer / Logout -->
             <VBox styleClass="sidebar-footer">
-                <Button text="⎋  Logout" onAction="#handleLogout" styleClass="logout-button" maxWidth="Infinity"/>
+                <Button onAction="#handleLogout" styleClass="logout-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-sign-out-alt" styleClass="logout-icon"/>
+                    </graphic>
+                    <text>Logout</text>
+                </Button>
             </VBox>
 
         </VBox>
@@ -65,7 +100,7 @@
             <Region HBox.hgrow="ALWAYS"/>
 
             <StackPane styleClass="profile-avatar">
-                <Circle radius="18"/>
+                <Circle radius="18" styleClass="profile-circle"/>
                 <Label text="MB" styleClass="profile-initials"/>
             </StackPane>
         </HBox>
@@ -79,163 +114,124 @@
                     <Insets top="32" right="40" bottom="40" left="40"/>
                 </padding>
 
-                <Label text="Welcome back, Lecturer 👋" styleClass="welcome"/>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <FontIcon styleClass="welcome-icon"/>
+                    <Label text="Welcome back, Lecturer" styleClass="welcome"/>
+                </HBox>
 
-                <!-- ===== STAT CARDS ===== -->
                 <!-- ===== STAT CARDS ===== -->
                 <HBox spacing="20">
 
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-
-                        <Label text="👥" styleClass="stat-icon"/>
-
-                        <Label fx:id="totalStudentsLabel"
-                               text="0"
-                               styleClass="stat-number"/>
-
-                        <Label text="Total Students"
-                               styleClass="stat-label"/>
-
+                        <FontIcon iconLiteral="fas-user-graduate" styleClass="stat-icon"/>
+                        <Label fx:id="totalStudentsLabel" text="0" styleClass="stat-number"/>
+                        <Label text="Total Students" styleClass="stat-label"/>
                     </VBox>
 
-
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-
-                        <Label text="✅" styleClass="stat-icon"/>
-
-                        <Label fx:id="attendancePercentageLabel"
-                               text="0%"
-                               styleClass="stat-number"/>
-
-                        <Label text="Today's Attendance"
-                               styleClass="stat-label"/>
-
+                        <FontIcon iconLiteral="fas-check-circle" styleClass="stat-icon"/>
+                        <Label fx:id="attendancePercentageLabel" text="0%" styleClass="stat-number"/>
+                        <Label text="Today's Attendance" styleClass="stat-label"/>
                     </VBox>
 
-
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-
-                        <Label text="📚" styleClass="stat-icon"/>
-
-                        <Label fx:id="assignedClassesLabel"
-                               text="0"
-                               styleClass="stat-number"/>
-
-                        <Label text="Assigned Classes"
-                               styleClass="stat-label"/>
-
+                        <FontIcon iconLiteral="fas-book" styleClass="stat-icon"/>
+                        <Label fx:id="assignedClassesLabel" text="0" styleClass="stat-number"/>
+                        <Label text="Assigned Classes" styleClass="stat-label"/>
                     </VBox>
 
                 </HBox>
 
+                <!-- ===== TODAY'S SCHEDULE ===== -->
                 <VBox spacing="10">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <FontIcon iconLiteral="fas-clock" styleClass="section-icon"/>
+                        <Label text="Today's Schedule" styleClass="section-title"/>
+                    </HBox>
 
-                    <Label text="Today's Schedule"
-                           styleClass="section-title"/>
-
-                    <TableView fx:id="scheduleTable"
-                               prefHeight="220">
-
+                    <TableView fx:id="scheduleTable" prefHeight="220">
                         <columns>
-
-                            <TableColumn text="Time"
-                                         fx:id="scheduleTimeColumn"/>
-
-                            <TableColumn text="Module"
-                                         fx:id="scheduleModuleColumn"/>
-
-                            <TableColumn text="Class"
-                                         fx:id="scheduleClassColumn"/>
-
-                            <TableColumn text="Status"
-                                         fx:id="scheduleStatusColumn"/>
-
+                            <TableColumn text="Time" fx:id="scheduleTimeColumn"/>
+                            <TableColumn text="Module" fx:id="scheduleModuleColumn"/>
+                            <TableColumn text="Class" fx:id="scheduleClassColumn"/>
+                            <TableColumn text="Status" fx:id="scheduleStatusColumn"/>
                         </columns>
-
                     </TableView>
-
                 </VBox>
 
                 <!-- ===== QUICK ACTIONS ===== -->
                 <VBox spacing="14">
-                    <Label text="Quick Actions" styleClass="section-title"/>
-
-                    <HBox spacing="20">
-
-                        <Button text="📷&#10;Take Attendance"
-                                styleClass="action-card"
-                                onAction="#handleTakeAttendance"
-                                HBox.hgrow="ALWAYS"
-                                maxWidth="Infinity"/>
-
-                        <Button text="👤&#10;Register Student"
-                                styleClass="action-card"
-                                onAction="#handleRegisterStudent"
-                                HBox.hgrow="ALWAYS"
-                                maxWidth="Infinity"/>
-
-                        <Button text="🧠&#10;Train Model"
-                                styleClass="action-card"
-                                onAction="#handleTrainModel"
-                                HBox.hgrow="ALWAYS"
-                                maxWidth="Infinity"/>
-
-                        <Button text="📊&#10;Reports"
-                                styleClass="action-card"
-                                onAction="#onPrintAttendance"
-                                HBox.hgrow="ALWAYS"
-                                maxWidth="Infinity"/>
-
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <FontIcon iconLiteral="fas-bolt" styleClass="section-icon"/>
+                        <Label text="Quick Actions" styleClass="section-title"/>
                     </HBox>
 
                     <HBox spacing="20">
+                        <Button onAction="#handleTakeAttendance" styleClass="action-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-camera" styleClass="action-icon-large"/>
+                            </graphic>
+                            <text>Take Attendance</text>
+                        </Button>
 
-                        <VBox styleClass="dashboard-card"
-                              HBox.hgrow="ALWAYS">
+                        <Button onAction="#handleRegisterStudent" styleClass="action-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-user-plus" styleClass="action-icon-large"/>
+                            </graphic>
+                            <text>Register Student</text>
+                        </Button>
 
-                            <Label text="Attendance Overview"
-                                   styleClass="section-title"/>
+                        <Button onAction="#handleTrainModel" styleClass="action-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-brain" styleClass="action-icon-large"/>
+                            </graphic>
+                            <text>Train Model</text>
+                        </Button>
 
+                        <Button onAction="#onPrintAttendance" styleClass="action-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-file-alt" styleClass="action-icon-large"/>
+                            </graphic>
+                            <text>Reports</text>
+                        </Button>
+                    </HBox>
+
+                    <!-- ===== ATTENDANCE OVERVIEW & RECENT ACTIVITY ===== -->
+                    <HBox spacing="20">
+                        <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <FontIcon iconLiteral="fas-chart-pie" styleClass="section-icon"/>
+                                <Label text="Attendance Overview" styleClass="section-title"/>
+                            </HBox>
                             <PieChart fx:id="attendanceChart"/>
-
                         </VBox>
 
-                        <VBox styleClass="dashboard-card"
-                              HBox.hgrow="ALWAYS">
-
-                            <Label text="Recent Activity"
-                                   styleClass="section-title"/>
-
+                        <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <FontIcon iconLiteral="fas-history" styleClass="section-icon"/>
+                                <Label text="Recent Activity" styleClass="section-title"/>
+                            </HBox>
                             <ListView fx:id="activityList"/>
-
                         </VBox>
-
                     </HBox>
-                    <VBox spacing="10">
 
-                        <Label text="Recent Attendance"
-                               styleClass="section-title"/>
+                    <!-- ===== RECENT ATTENDANCE ===== -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <FontIcon iconLiteral="fas-table" styleClass="section-icon"/>
+                            <Label text="Recent Attendance" styleClass="section-title"/>
+                        </HBox>
 
                         <TableView fx:id="attendanceTable">
-
                             <columns>
-
                                 <TableColumn fx:id="fnameColumn" text="First Name"/>
-
                                 <TableColumn fx:id="lastnameColumn" text="Last Name"/>
-
                                 <TableColumn fx:id="moduleColumn" text="Module"/>
-
                                 <TableColumn fx:id="classColumn" text="Class"/>
-
                                 <TableColumn fx:id="statusColumn" text="Status"/>
-
                                 <TableColumn fx:id="timeColumn" text="Time"/>
-
                             </columns>
-
                         </TableView>
-
                     </VBox>
                 </VBox>
 

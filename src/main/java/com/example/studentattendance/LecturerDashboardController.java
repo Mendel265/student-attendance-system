@@ -21,8 +21,8 @@ import java.util.Map;
 
 public class LecturerDashboardController {
 
-
     private int lecturerId;
+
     @FXML
     private Label totalStudentsLabel;
 
@@ -31,52 +31,38 @@ public class LecturerDashboardController {
 
     @FXML
     private Label assignedClassesLabel;
+
     @FXML
     private TableView<AttendanceRecord> attendanceTable;
 
+    @FXML
+    private TableColumn<AttendanceRecord, String> fnameColumn;
 
     @FXML
-    private TableColumn<AttendanceRecord,String> fnameColumn;
+    private TableColumn<AttendanceRecord, String> lastnameColumn;
 
     @FXML
-    private TableColumn<AttendanceRecord,String>  lastnameColumn;
+    private TableColumn<AttendanceRecord, String> moduleColumn;
 
     @FXML
-    private TableColumn<AttendanceRecord,String> moduleColumn;
-
-
-    @FXML
-    private TableColumn<AttendanceRecord,String> classColumn;
-
+    private TableColumn<AttendanceRecord, String> classColumn;
 
     @FXML
-    private TableColumn<AttendanceRecord,String> statusColumn;
-
-
-    @FXML
-    private TableColumn<AttendanceRecord,String> timeColumn;
+    private TableColumn<AttendanceRecord, String> statusColumn;
 
     @FXML
-    public void initialize(){
+    private TableColumn<AttendanceRecord, String> timeColumn;
 
-        setupAttendanceTable();
+    private ObservableList<AttendanceRecord> attendanceList = FXCollections.observableArrayList();
 
-    }
-
-
-    private ObservableList<AttendanceRecord> attendanceList =
-            FXCollections.observableArrayList();
-
-    private final String url =
-            "jdbc:mysql://localhost:3306/students_attendance";
-
+    private final String url = "jdbc:mysql://localhost:3306/students_attendance";
     private final String user = "root";
-
     private final String password = "";
 
-
-
-
+    @FXML
+    public void initialize() {
+        setupAttendanceTable();
+    }
 
     @FXML
     private void onPrintAttendance(ActionEvent event) {
@@ -84,14 +70,10 @@ public class LecturerDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/print_attendance_dialog.fxml"));
             Parent root = loader.load();
 
-            // Get the controller for the dialog
             PrintAttendanceDialogController controller = loader.getController();
-
-            // Pass the lecturerId and initialize its data
             controller.setLecturerId(lecturerId);
             controller.initializeData();
 
-            // Show the dialog
             Stage stage = new Stage();
             stage.setTitle("Print Attendance Report");
             stage.setScene(new Scene(root));
@@ -99,272 +81,231 @@ public class LecturerDashboardController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Error", "Could not open print dialog: " + e.getMessage());
         }
     }
 
-    private void setupAttendanceTable(){
-
-        fnameColumn.setCellValueFactory(
-                new PropertyValueFactory<>("fname")
-        );
-
-        lastnameColumn.setCellValueFactory(
-                new PropertyValueFactory<>("lastname")
-        );
-
-        moduleColumn.setCellValueFactory(
-                new PropertyValueFactory<>("module")
-        );
-
-        classColumn.setCellValueFactory(
-                new PropertyValueFactory<>("className")
-        );
-
-        statusColumn.setCellValueFactory(
-                new PropertyValueFactory<>("status")
-        );
-
-        timeColumn.setCellValueFactory(
-                new PropertyValueFactory<>("time")
-        );
-
+    private void setupAttendanceTable() {
+        fnameColumn.setCellValueFactory(new PropertyValueFactory<>("fname"));
+        lastnameColumn.setCellValueFactory(new PropertyValueFactory<>("lastname"));
+        moduleColumn.setCellValueFactory(new PropertyValueFactory<>("module"));
+        classColumn.setCellValueFactory(new PropertyValueFactory<>("className"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
     }
 
-    private void loadRecentAttendance(){
-
-
+    private void loadRecentAttendance() {
         String sql = """
-SELECT
-    s.fname,
-    s.lastname,
-    m.module_name,
-    m.class_name,
-    a.status,
-    a.check_out_time AS time
-FROM attendance a
+            SELECT
+                s.fname,
+                s.lastname,
+                m.module_name,
+                m.class_name,
+                a.status,
+                a.check_out_time AS time
+            FROM attendance a
+            JOIN students s ON a.student_id = s.student_id
+            JOIN schedule sc ON a.schedule_id = sc.schedule_id
+            JOIN lecturer_module lm ON sc.lecturer_module_id = lm.lecturer_module_id
+            JOIN modules m ON lm.module_id = m.id
+            WHERE lm.lecturer_id = ?
+            ORDER BY a.check_out_time DESC
+            LIMIT 10
+        """;
 
-JOIN students s
-    ON a.student_id = s.student_id
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-JOIN schedule sc
-    ON a.schedule_id = sc.schedule_id
-
-JOIN lecturer_module lm
-    ON sc.lecturer_module_id = lm.lecturer_module_id
-
-JOIN modules m
-    ON lm.module_id = m.id
-
-WHERE lm.lecturer_id = ?
-
-ORDER BY a.check_out_time DESC
-LIMIT 10
-""";
-
-        try(Connection conn =
-                    DriverManager.getConnection(url,user,password);
-
-            PreparedStatement ps =
-                    conn.prepareStatement(sql)){
-
-
-            ps.setInt(1,lecturerId);
-
-
-            ResultSet rs =
-                    ps.executeQuery();
-
-
+            ps.setInt(1, lecturerId);
+            ResultSet rs = ps.executeQuery();
             attendanceList.clear();
 
-
-            while(rs.next()){
-
-
-                attendanceList.add(
-                        new AttendanceRecord(
-                                rs.getString("fname"),
-                                rs.getString("lastname"),
-                                rs.getString("module"),
-                                rs.getString("class_name"),
-                                rs.getString("status"),
-                                rs.getString("time")
-                        )
-                );
-
+            while (rs.next()) {
+                attendanceList.add(new AttendanceRecord(
+                        rs.getString("fname"),
+                        rs.getString("lastname"),
+                        rs.getString("module"),
+                        rs.getString("class_name"),
+                        rs.getString("status"),
+                        rs.getString("time")
+                ));
             }
-
 
             attendanceTable.setItems(attendanceList);
 
-
-
-        }catch(Exception e){
-
+        } catch (Exception e) {
             e.printStackTrace();
-
+            // If table doesn't exist, show empty state
+            attendanceTable.setItems(FXCollections.observableArrayList());
         }
-
-
     }
 
-    public void setLecturerId(int id){
-
-        this.lecturerId=id;
-
-
+    public void setLecturerId(int id) {
+        this.lecturerId = id;
         loadDashboardStatistics();
-
         loadRecentAttendance();
-
     }
 
-    private void loadDashboardStatistics(){
-
+    private void loadDashboardStatistics() {
         loadTotalStudents();
-
         loadTodayAttendance();
-
         loadAssignedClasses();
-
     }
 
-    private void loadTotalStudents(){
+    private void loadTotalStudents() {
+        String sql = "SELECT COUNT(*) FROM students";
 
-        String sql =
-                "SELECT COUNT(*) FROM students";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-        try(Connection conn =
-                    DriverManager.getConnection(url,user,password);
-
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
-
-            ResultSet rs = ps.executeQuery()){
-
-            if(rs.next()){
-
-                totalStudentsLabel.setText(
-                        String.valueOf(rs.getInt(1))
-                );
-
+            if (rs.next()) {
+                totalStudentsLabel.setText(String.valueOf(rs.getInt(1)));
             }
-        }catch(SQLException e){
-
+        } catch (SQLException e) {
             e.printStackTrace();
-
+            totalStudentsLabel.setText("0");
         }
-
     }
-    private void loadTodayAttendance(){
 
-        String sql =
-                """
-                SELECT 
-                COUNT(*) 
-                FROM attendance
-                WHERE attendance_date = CURDATE()
-                AND status='present'
-                """;
+    private void loadTodayAttendance() {
+        String sql = """
+            SELECT COUNT(*) 
+            FROM attendance
+            WHERE attendance_date = CURDATE()
+            AND status = 'present'
+        """;
 
-        try(Connection conn =
-                    DriverManager.getConnection(url,user,password);
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
-
-            ResultSet rs = ps.executeQuery()){
-
-            if(rs.next()){
-
+            if (rs.next()) {
                 int present = rs.getInt(1);
-
-                attendancePercentageLabel.setText(
-                        present + "%"
-                );
-
+                attendancePercentageLabel.setText(present + "%");
             }
-        }catch(SQLException e){
-
+        } catch (SQLException e) {
             e.printStackTrace();
-
+            attendancePercentageLabel.setText("0%");
         }
-
     }
-    private void loadAssignedClasses(){
 
-        String sql =
-                """
-                SELECT COUNT(DISTINCT class_name)
-                FROM lecturer_modules
-                WHERE lecturer_id=?
-                """;
+    private void loadAssignedClasses() {
+        // Try the original query first
+        String sql = """
+            SELECT COUNT(DISTINCT class_name)
+            FROM lecturer_modules
+            WHERE lecturer_id = ?
+        """;
 
-        try(Connection conn =
-                    DriverManager.getConnection(url,user,password);
-
-            PreparedStatement ps =
-                    conn.prepareStatement(sql)){
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, lecturerId);
+            ResultSet rs = ps.executeQuery();
 
-            ResultSet rs =
-                    ps.executeQuery();
-
-            if(rs.next()){
-
-                assignedClassesLabel.setText(
-                        String.valueOf(rs.getInt(1))
-                );
-
+            if (rs.next()) {
+                assignedClassesLabel.setText(String.valueOf(rs.getInt(1)));
+                return;
             }
 
-        }catch(SQLException e){
-            e.printStackTrace();
-
+        } catch (SQLException e) {
+            // Table doesn't exist, try alternative query
+            System.out.println("lecturer_modules table not found, trying alternative...");
+            loadAssignedClassesAlternative();
         }
+    }
 
+    private void loadAssignedClassesAlternative() {
+        // Try to get assigned classes from schedule table
+        String sql = """
+            SELECT COUNT(DISTINCT s.class_name)
+            FROM schedule sc
+            JOIN lecturer_module lm ON sc.lecturer_module_id = lm.lecturer_module_id
+            JOIN modules m ON lm.module_id = m.id
+            WHERE lm.lecturer_id = ?
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, lecturerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                assignedClassesLabel.setText(String.valueOf(rs.getInt(1)));
+                return;
+            }
+
+        } catch (SQLException e) {
+            // If both fail, try to get from lectures table
+            System.out.println("Schedule table also not found, trying lectures table...");
+            loadAssignedClassesFromLectures();
+        }
+    }
+
+    private void loadAssignedClassesFromLectures() {
+        // Last resort: get from lectures table
+        String sql = """
+            SELECT COUNT(DISTINCT module_name)
+            FROM lectures
+            WHERE lecture_id = ?
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, lecturerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                assignedClassesLabel.setText(String.valueOf(rs.getInt(1)));
+                return;
+            }
+
+        } catch (SQLException e) {
+            // If all fail, set to 0
+            System.out.println("All queries failed, setting to 0");
+            assignedClassesLabel.setText("0");
+        }
     }
 
     @FXML
     public void handleLogout(ActionEvent event) {
         try {
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
             stage.setScene(new Scene(root));
             stage.setTitle("Student Attendance System - Login");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Failed to logout and load login screen.");
-            alert.showAndWait();
+            showAlert("Error", "Failed to logout and load login screen.");
         }
     }
+
     @FXML
-    public void handleRegisterStudent(ActionEvent event){
+    public void handleRegisterStudent(ActionEvent event) {
         try {
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/student_register.fxml"));
             stage.setScene(new Scene(root));
             stage.setTitle("Register Student");
             stage.show();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
+            showAlert("Error", "Could not open student registration: " + e.getMessage());
         }
     }
+
     @FXML
     public void handleTakeAttendance(ActionEvent event) {
         try {
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/take_attendance.fxml")); // FIX: Create loader first
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/take_attendance.fxml"));
             Parent root = loader.load();
 
-            // Pass lecturer ID to TakeAttendanceController
             TakeAttendanceController controller = loader.getController();
             controller.setLecturerId(lecturerId);
 
@@ -373,28 +314,24 @@ LIMIT 10
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Failed to load Take Attendance screen.");
-            alert.showAndWait();
+            showAlert("Error", "Failed to load Take Attendance screen: " + e.getMessage());
         }
     }
 
-
     @FXML
-    private void handleTrainModel(ActionEvent event){
+    private void handleTrainModel(ActionEvent event) {
         try {
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/train_face_model.fxml"));
             stage.setScene(new Scene(root));
             stage.setTitle("Train Face Model");
             stage.show();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
+            showAlert("Error", "Could not open Train Model: " + e.getMessage());
         }
     }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -402,5 +339,4 @@ LIMIT 10
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
