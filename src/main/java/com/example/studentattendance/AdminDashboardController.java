@@ -28,25 +28,36 @@ public class AdminDashboardController {
         }
     }
 
-
     public void handleManageStudents(ActionEvent event) {
         System.out.println("Manage Students clicked");
         // TODO: Load Manage Students screen
     }
+
     @FXML
     private void handleManageClasses(ActionEvent event) {
         try {
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/manage_classes.fxml"));
-            stage.setScene(new Scene(root));
-            stage.setTitle("Manage Classes");
-            stage.show();
+            // FIXED: Open in a NEW window instead of replacing the dashboard
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/manage_classes.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage (dashboard)
+            Stage dashboardStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Create a new stage for Manage Classes
+            Stage manageClassesStage = new Stage();
+            manageClassesStage.setTitle("Manage Classes");
+            manageClassesStage.setScene(new Scene(root));
+
+            // Set the owner to the dashboard stage
+            manageClassesStage.initOwner(dashboardStage);
+
+            // Show the new window - dashboard stays open in background
+            manageClassesStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     public void handleViewReports(ActionEvent event) {
         System.out.println("View Attendance Reports clicked");
@@ -56,17 +67,23 @@ public class AdminDashboardController {
     @FXML
     private void handleManageSchedule(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/admin_schedule.fxml")
-            );
-
+            // FIXED: Open in a NEW window instead of replacing the dashboard
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin_schedule.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            // Get the current stage (dashboard)
+            Stage dashboardStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            stage.setScene(new Scene(root));
-            stage.setTitle("Manage Lecture Schedule");
-            stage.show();
+            // Create a new stage for Manage Schedule
+            Stage scheduleStage = new Stage();
+            scheduleStage.setTitle("Manage Lecture Schedule");
+            scheduleStage.setScene(new Scene(root));
+
+            // Set the owner to the dashboard stage
+            scheduleStage.initOwner(dashboardStage);
+
+            // Show the new window - dashboard stays open in background
+            scheduleStage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,10 +93,12 @@ public class AdminDashboardController {
     public void handleLogout(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(loader.load()));
-            stage.setTitle("Login");
-            stage.show();
+            Parent root = loader.load();
+
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(root));
+            loginStage.setTitle("Login");
+            loginStage.show();
 
             // Close the dashboard
             ((Stage) ((Button) event.getSource()).getScene().getWindow()).close();
@@ -88,12 +107,3 @@ public class AdminDashboardController {
         }
     }
 }
-
-
-
-
-
-
-
-
-
