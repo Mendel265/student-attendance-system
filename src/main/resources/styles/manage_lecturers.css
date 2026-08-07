@@ -1,47 +1,182 @@
-/* ===================== ROOT ===================== */
-.manage-root {
-    -fx-background-color: #f4f6fb;
-    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+/* ---------------- Back Button ---------------- */
+
+.btn-back {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1C2340;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16 8 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-color: #D1D5E0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
 }
 
-/* ===================== HEADER ===================== */
+.btn-back:hover {
+    -fx-background-color: #F4F6FB;
+    -fx-border-color: #12ABA0;
+}
+
+.btn-back:pressed {
+    -fx-background-color: #E7E9F3;
+}
+
+.back-icon {
+    -fx-icon-color: #1C2340;
+    -fx-icon-size: 16;
+}
+
+.btn-back:hover .back-icon {
+    -fx-icon-color: #12ABA0;
+}
+
+/* ---------------- Header with Back Button Layout ---------------- */
+
 .page-title {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1e1b4b;
+    -fx-text-fill: #1C2340;
+}
+
+.header-icon {
+    -fx-icon-color: #12ABA0;
+    -fx-icon-size: 28;
 }
 
 .page-subtitle {
-    -fx-font-size: 12px;
-    -fx-text-fill: #9ca3af;
-}
-
-/* ===================== LIST CARD ===================== */
-.list-card {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 14;
-    -fx-padding: 6;
-    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
-}
-
-.lecturer-list {
-    -fx-background-color: transparent;
-    -fx-background-radius: 10;
-}
-
-.lecturer-list .list-cell {
-    -fx-padding: 12 16 12 16;
     -fx-font-size: 13px;
-    -fx-text-fill: #34495e;
+    -fx-text-fill: #7B819C;
+    -fx-padding: 0 0 8 0;
+}
+
+/* Button styles */
+.btn-primary {
+    -fx-background-color: #12ABA0;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0D8C83;
+}
+
+.btn-primary:pressed {
+    -fx-background-color: #0A6F68;
+}
+
+.btn-secondary {
+    -fx-background-color: #4A5A8A;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #3A4A70;
+}
+
+.btn-secondary:pressed {
+    -fx-background-color: #2A3A60;
+}
+
+.btn-danger {
+    -fx-background-color: #DC3545;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #C82333;
+}
+
+.btn-danger:pressed {
+    -fx-background-color: #BD2130;
+}
+
+.btn-icon {
+    -fx-icon-color: #FFFFFF;
+    -fx-icon-size: 14;
+    -fx-margin: 0 6 0 0;
+}
+
+.btn-danger .btn-icon {
+    -fx-icon-color: #FFFFFF;
+}
+
+.btn-secondary .btn-icon {
+    -fx-icon-color: #FFFFFF;
+}
+
+/* List card and table styles */
+.list-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(28,35,64,0.07), 10, 0, 0, 3);
+}
+
+.list-card .table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #E7E9F3;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.list-card .table-view .column-header {
+    -fx-background-color: #F4F6FB;
+    -fx-border-color: #E7E9F3;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8 0 8 0;
+}
+
+.list-card .table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #1C2340;
+    -fx-font-size: 13px;
+}
+
+.list-card .table-view .table-cell {
+    -fx-padding: 10 8 10 8;
+    -fx-border-color: #E7E9F3;
+    -fx-border-width: 0 0 1 0;
+}
+
+.list-card .table-view .table-row-cell:odd {
+    -fx-background-color: #FAFBFD;
+}
+
+.list-card .table-view .table-row-cell:selected {
+    -fx-background-color: #12ABA0;
+}
+
+.list-card .table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #FFFFFF;
+}
+
+.list-card .table-view .table-row-cell:hover {
+    -fx-background-color: #E8F4F3;
+    -fx-cursor: hand;
+}
+
+/* ScrollBar Styling */
+.list-card .table-view .scroll-bar {
     -fx-background-color: transparent;
 }
 
-.lecturer-list .list-cell:filled:hover {
-    -fx-background-color: #f4f6fb;
+.list-card .table-view .scroll-bar .thumb {
+    -fx-background-color: #C7CCE6;
+    -fx-background-radius: 8;
 }
 
-.lecturer-list .list-cell:filled:selected {
-    -fx-background-color: #eef2ff;
-    -fx-text-fill: #4f46e5;
-    -fx-font-weight: bold;
+.list-card .table-view .scroll-bar .thumb:hover {
+    -fx-background-color: #8890B5;
 }

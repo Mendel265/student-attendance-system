@@ -8,11 +8,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.6"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.studentattendance.ManageLecturerController">
-
+            fx:controller="com.example.studentattendance.ManageLecturerController"
+            stylesheets="@../styles/admin_dashboard.css">
 
     <VBox spacing="20"
           AnchorPane.topAnchor="0"
@@ -27,26 +29,42 @@
                     left="36"/>
         </padding>
 
+        <!-- Header with Back Button -->
+        <VBox spacing="4">
 
-        <!-- Header -->
-        <VBox alignment="CENTER"
-              spacing="4">
+            <!-- Top row: Back button + Title -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <!-- Back Button -->
+                <Button onAction="#handleBack" styleClass="btn-back">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-arrow-left" styleClass="back-icon"/>
+                    </graphic>
+                    <text>Back</text>
+                </Button>
 
-            <Label text="Manage Lecturers"
-                   styleClass="page-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
 
+                <!-- Title with Icon -->
+                <HBox alignment="CENTER" spacing="10">
+                    <FontIcon iconLiteral="fas-chalkboard-teacher" styleClass="header-icon"/>
+                    <Label text="Manage Lecturers" styleClass="page-title"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Subtitle -->
             <Label text="View and manage all registered lecturers"
-                   styleClass="page-subtitle"/>
+                   styleClass="page-subtitle"
+                   alignment="CENTER"
+                   maxWidth="Infinity"/>
 
         </VBox>
-
-
 
         <!-- Lecturer Table -->
         <VBox spacing="10"
               styleClass="list-card"
               VBox.vgrow="ALWAYS">
-
 
             <TableView fx:id="lecturerTable">
 
@@ -68,39 +86,42 @@
 
             </TableView>
 
-
-
             <!-- Buttons -->
             <HBox alignment="CENTER_RIGHT"
                   spacing="15">
 
+                <Button onAction="#handleAddLecturer" styleClass="btn-primary">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-plus-circle" styleClass="btn-icon"/>
+                    </graphic>
+                    <text>Add Lecturer</text>
+                </Button>
 
-                <Button text="➕ Add Lecturer"
-                        onAction="#handleAddLecturer"
-                        styleClass="btn-primary"/>
+                <Button onAction="#handleAssignModules" styleClass="btn-secondary">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-book" styleClass="btn-icon"/>
+                    </graphic>
+                    <text>Assign Module</text>
+                </Button>
 
+                <Button onAction="#handleEditLecturer" styleClass="btn-primary">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-edit" styleClass="btn-icon"/>
+                    </graphic>
+                    <text>Edit Lecturer</text>
+                </Button>
 
-                <Button text="Assign Module"
-                        onAction="#handleAssignModules"/>
-
-
-                <Button text="✏ Edit Lecturer"
-                        onAction="#handleEditLecturer"
-                        styleClass="btn-primary"/>
-
-
-                <Button text="🗑 Delete"
-                        onAction="#handleDeleteLecturer"
-                        styleClass="btn-danger"/>
-
+                <Button onAction="#handleDeleteLecturer" styleClass="btn-danger">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-trash-alt" styleClass="btn-icon"/>
+                    </graphic>
+                    <text>Delete</text>
+                </Button>
 
             </HBox>
 
-
         </VBox>
 
-
     </VBox>
-
 
 </AnchorPane>
