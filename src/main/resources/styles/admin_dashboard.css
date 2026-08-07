@@ -1,70 +1,196 @@
+/* =========================================================
+   Admin Dashboard — redesigned theme
+   Palette: deep indigo sidebar, soft slate background,
+   teal accent, warm card surfaces with subtle elevation.
+   ========================================================= */
 
-/* ===================== ROOT ===================== */
 .admin-root {
-    -fx-background-color: #f4f6fb;
-    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-background-color: #F4F6FB;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
-/* ===================== TOP BAR ===================== */
+/* ---------------- Sidebar ---------------- */
+
+.sidebar {
+    -fx-background-color: #1C2340;
+}
+
+.sidebar-brand .brand-title {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+
+.sidebar-brand .brand-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8890B5;
+}
+
+.sidebar-separator .line {
+    -fx-border-color: #2E3660;
+    -fx-opacity: 1;
+}
+
+.sidebar-nav .sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #C7CCE6;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 14 12 14;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.sidebar-nav .sidebar-btn:hover {
+    -fx-background-color: #2A3260;
+    -fx-text-fill: #FFFFFF;
+}
+
+.sidebar-nav .sidebar-btn:pressed {
+    -fx-background-color: #12ABA0;
+    -fx-text-fill: #FFFFFF;
+}
+
+.sidebar-footer .btn-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E37B7B;
+    -fx-font-size: 13px;
+    -fx-border-color: #3A4270;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 14 10 14;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+
+.sidebar-footer .btn-logout:hover {
+    -fx-background-color: #2A2040;
+    -fx-text-fill: #FF9B9B;
+}
+
+/* ---------------- Topbar ---------------- */
+
 .topbar {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e5e7eb;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #E7E9F3 transparent;
     -fx-border-width: 0 0 1 0;
 }
 
-.page-title {
+.topbar .page-title {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1e1b4b;
+    -fx-text-fill: #1C2340;
 }
 
-.page-subtitle {
-    -fx-font-size: 12px;
-    -fx-text-fill: #9ca3af;
-}
-
-.btn-logout {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #dc2626;
+.topbar .page-subtitle {
     -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-padding: 9 18 9 18;
-    -fx-cursor: hand;
+    -fx-text-fill: #7B819C;
 }
 
-.btn-logout:hover {
-    -fx-background-color: #fecaca;
-}
+/* ---------------- Content area ---------------- */
 
-/* ===================== CONTENT ===================== */
 .content-area {
-    -fx-background-color: transparent;
+    -fx-background-color: #F4F6FB;
 }
+
+.section-heading {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1C2340;
+    -fx-padding: 4 0 0 2;
+}
+
+/* ---------------- Stat strip ---------------- */
+
+.stat-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14;
+    -fx-padding: 16 18 16 18;
+    -fx-spacing: 6;
+    -fx-effect: dropshadow(gaussian, rgba(28,35,64,0.07), 10, 0, 0, 3);
+}
+
+.stat-card .stat-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9096B4;
+}
+
+.stat-card .stat-value {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #12ABA0;
+}
+
+/* ---------------- Action cards ---------------- */
 
 .nav-grid {
-    -fx-pref-width: 620;
-    -fx-max-width: 620;
+    -fx-alignment: TOP_LEFT;
 }
 
-/* ===================== ACTION CARDS ===================== */
 .action-card {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #FFFFFF;
     -fx-background-radius: 16;
-    -fx-pref-height: 130;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1e1b4b;
-    -fx-text-alignment: center;
-    -fx-alignment: center;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(30,27,75,0.08), 12, 0, 0, 4);
-    -fx-border-color: transparent;
+    -fx-padding: 20 20 18 20;
+    -fx-effect: dropshadow(gaussian, rgba(28,35,64,0.08), 14, 0, 0, 4);
+    -fx-min-height: 150;
 }
 
 .action-card:hover {
-    -fx-background-color: #eef2ff;
-    -fx-border-color: #4f46e5;
-    -fx-border-width: 1.5;
-    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(18,171,160,0.25), 18, 0, 0, 6);
+    -fx-cursor: hand;
+}
+
+.action-card .action-icon {
+    -fx-font-size: 26px;
+}
+
+.action-card .action-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1C2340;
+}
+
+.action-card .action-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8890A8;
+}
+
+.action-card .action-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #12ABA0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 0 0 0;
+    -fx-cursor: hand;
+}
+
+.action-card .action-link:hover {
+    -fx-text-fill: #0D8C83;
+    -fx-underline: true;
+}
+/* Already in your CSS - these handle the icon styling */
+.brand-icon {
+    -fx-icon-color: #12ABA0;
+    -fx-icon-size: 20;
+}
+
+.sidebar-icon {
+    -fx-icon-color: #8890B5;
+    -fx-icon-size: 16;
+}
+
+.logout-icon {
+    -fx-icon-color: #E37B7B;
+    -fx-icon-size: 15;
+}
+
+.stat-icon {
+    -fx-icon-color: #12ABA0;
+    -fx-icon-size: 18;
+}
+
+.action-icon {
+    -fx-icon-color: #12ABA0;
+    -fx-icon-size: 26;
 }

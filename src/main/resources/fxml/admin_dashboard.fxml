@@ -3,73 +3,206 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane prefHeight="560" prefWidth="760"
+<BorderPane prefHeight="640" prefWidth="1020"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.studentattendance.AdminDashboardController"
             stylesheets="@../styles/admin_dashboard.css"
             styleClass="admin-root">
 
+    <!-- Left: Sidebar navigation -->
+    <left>
+        <VBox styleClass="sidebar" spacing="4" prefWidth="240">
+
+            <VBox styleClass="sidebar-brand" spacing="2">
+                <padding>
+                    <Insets top="28" right="24" bottom="24" left="24"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <FontIcon iconLiteral="fas-graduation-cap" styleClass="brand-icon"/>
+                    <Label text="Attendance" styleClass="brand-title"/>
+                </HBox>
+                <Label text="Admin Console" styleClass="brand-subtitle"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <VBox spacing="4" styleClass="sidebar-nav">
+                <padding>
+                    <Insets top="16" right="12" bottom="12" left="12"/>
+                </padding>
+
+                <Button onAction="#handleManageLecturers" styleClass="sidebar-btn" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-chalkboard-teacher" styleClass="sidebar-icon"/>
+                    </graphic>
+                    <text>Lecturers</text>
+                </Button>
+
+                <Button onAction="#handleManageStudents" styleClass="sidebar-btn" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-user-graduate" styleClass="sidebar-icon"/>
+                    </graphic>
+                    <text>Students</text>
+                </Button>
+
+                <Button onAction="#handleManageClasses" styleClass="sidebar-btn" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-school" styleClass="sidebar-icon"/>
+                    </graphic>
+                    <text>Classes</text>
+                </Button>
+
+                <Button onAction="#handleViewReports" styleClass="sidebar-btn" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-chart-bar" styleClass="sidebar-icon"/>
+                    </graphic>
+                    <text>Attendance Reports</text>
+                </Button>
+
+                <Button onAction="#handleManageSchedule" styleClass="sidebar-btn" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-calendar-alt" styleClass="sidebar-icon"/>
+                    </graphic>
+                    <text>Lecture Schedule</text>
+                </Button>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="sidebar-footer">
+                <padding>
+                    <Insets top="12" right="12" bottom="20" left="12"/>
+                </padding>
+                <Button onAction="#handleLogout" styleClass="btn-logout" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-sign-out-alt" styleClass="logout-icon"/>
+                    </graphic>
+                    <text>Logout</text>
+                </Button>
+            </VBox>
+
+        </VBox>
+    </left>
+
     <!-- Top: Header -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20" styleClass="topbar">
             <padding>
-                <Insets top="20" right="36" bottom="20" left="36"/>
+                <Insets top="24" right="36" bottom="24" left="36"/>
             </padding>
 
             <VBox spacing="4">
-                <Label text="Admin Dashboard" styleClass="page-title"/>
-                <Label text="Manage lecturers, students, classes and reports" styleClass="page-subtitle"/>
+                <Label text="Welcome back, Admin" styleClass="page-title"/>
+                <Label text="Here's what's happening across your institution today" styleClass="page-subtitle"/>
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
-
-            <Button text="⎋  Logout" onAction="#handleLogout" styleClass="btn-logout"/>
         </HBox>
     </top>
 
-    <!-- Center: Navigation Cards -->
+    <!-- Center: Dashboard content -->
     <center>
-        <VBox alignment="TOP_CENTER" styleClass="content-area">
+        <VBox spacing="28" styleClass="content-area">
             <padding>
-                <Insets top="30" right="50" bottom="40" left="50"/>
+                <Insets top="8" right="36" bottom="36" left="36"/>
             </padding>
 
-            <GridPane hgap="20" vgap="20" styleClass="nav-grid">
+            <!-- Quick stat strip -->
+            <HBox spacing="18" styleClass="stat-strip">
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <FontIcon iconLiteral="fas-users" styleClass="stat-icon"/>
+                        <Label text="LECTURERS" styleClass="stat-label"/>
+                    </HBox>
+                    <Label text="--" styleClass="stat-value"/>
+                </VBox>
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <FontIcon iconLiteral="fas-user-friends" styleClass="stat-icon"/>
+                        <Label text="STUDENTS" styleClass="stat-label"/>
+                    </HBox>
+                    <Label text="--" styleClass="stat-value"/>
+                </VBox>
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <FontIcon iconLiteral="fas-chalkboard" styleClass="stat-icon"/>
+                        <Label text="CLASSES" styleClass="stat-label"/>
+                    </HBox>
+                    <Label text="--" styleClass="stat-value"/>
+                </VBox>
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <FontIcon iconLiteral="fas-calendar-check" styleClass="stat-icon"/>
+                        <Label text="TODAY'S ATTENDANCE" styleClass="stat-label"/>
+                    </HBox>
+                    <Label text="--" styleClass="stat-value"/>
+                </VBox>
+            </HBox>
+
+            <Label text="Quick Actions" styleClass="section-heading"/>
+
+            <GridPane hgap="18" vgap="18" styleClass="nav-grid">
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="50"/>
-                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="33.33"/>
+                    <ColumnConstraints percentWidth="33.33"/>
+                    <ColumnConstraints percentWidth="33.33"/>
                 </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                </rowConstraints>
 
-                <Button text="👨‍🏫&#10;Manage Lecturers" onAction="#handleManageLecturers"
-                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
-                        GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <VBox styleClass="action-card" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
+                    <FontIcon iconLiteral="fas-chalkboard-teacher" styleClass="action-icon"/>
+                    <Label text="Manage Lecturers" styleClass="action-title"/>
+                    <Label text="Add, edit or remove lecturer accounts" styleClass="action-desc" wrapText="true"/>
+                    <Button text="Open →" onAction="#handleManageLecturers" styleClass="action-link"/>
+                </VBox>
 
-                <Button text="🎓&#10;Manage Students" onAction="#handleManageStudents"
-                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
-                        GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <VBox styleClass="action-card" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
+                    <FontIcon iconLiteral="fas-user-graduate" styleClass="action-icon"/>
+                    <Label text="Manage Students" styleClass="action-title"/>
+                    <Label text="View and maintain student records" styleClass="action-desc" wrapText="true"/>
+                    <Button text="Open →" onAction="#handleManageStudents" styleClass="action-link"/>
+                </VBox>
 
-                <Button text="🏫&#10;Manage Classes" onAction="#handleManageClasses"
-                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
-                        GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <VBox styleClass="action-card" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
+                    <FontIcon iconLiteral="fas-school" styleClass="action-icon"/>
+                    <Label text="Manage Classes" styleClass="action-title"/>
+                    <Label text="Create and organize class groups" styleClass="action-desc" wrapText="true"/>
+                    <Button text="Open →" onAction="#handleManageClasses" styleClass="action-link"/>
+                </VBox>
 
-                <Button text="📊&#10;View Attendance Reports" onAction="#handleViewReports"
-                        styleClass="action-card" maxWidth="Infinity" maxHeight="Infinity"
-                        GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                <Button text="📅&#10;Manage Lecture Schedule"
-                        onAction="#handleManageSchedule"
-                        styleClass="action-card"
-                        maxWidth="Infinity"
-                        maxHeight="Infinity"
-                        GridPane.rowIndex="2"
-                        GridPane.columnIndex="0"/>
+                <VBox styleClass="action-card" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
+                    <FontIcon iconLiteral="fas-chart-pie" styleClass="action-icon"/>
+                    <Label text="Attendance Reports" styleClass="action-title"/>
+                    <Label text="Review attendance trends and exports" styleClass="action-desc" wrapText="true"/>
+                    <Button text="Open →" onAction="#handleViewReports" styleClass="action-link"/>
+                </VBox>
+
+                <VBox styleClass="action-card" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
+                    <FontIcon iconLiteral="fas-clock" styleClass="action-icon"/>
+                    <Label text="Lecture Schedule" styleClass="action-title"/>
+                    <Label text="Plan and adjust lecture timetables" styleClass="action-desc" wrapText="true"/>
+                    <Button text="Open →" onAction="#handleManageSchedule" styleClass="action-link"/>
+                </VBox>
+
             </GridPane>
 
         </VBox>
