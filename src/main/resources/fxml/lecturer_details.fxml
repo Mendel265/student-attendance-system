@@ -41,10 +41,6 @@
                     maxWidth="Infinity"
                     styleClass="btn-primary"/>
 
-            <Button text="➕  Assign to Class &amp; Modules"
-                    onAction="#handleAssignToClass"
-                    maxWidth="Infinity"
-                    styleClass="btn-secondary"/>
         </VBox>
 
     </VBox>

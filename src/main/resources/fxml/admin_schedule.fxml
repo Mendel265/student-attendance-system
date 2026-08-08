@@ -1,118 +1,253 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.studentattendance.AdminScheduleController"
+      prefWidth="700"
+      prefHeight="600"
+      stylesheets="@../styles/assign_class_semester.css"
+      styleClass="assign-root"
+      spacing="20"
+     >
 
-<AnchorPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.studentattendance.AssignClassSemesterController"
-            prefWidth="700"
-            prefHeight="600"
-            stylesheets="@../styles/assign_class_semester.css"
-            styleClass="assign-root">
+    <padding>
+        <Insets top="30"
+                right="36"
+                bottom="30"
+                left="36"/>
+    </padding>
 
-    <VBox spacing="20"
-          AnchorPane.topAnchor="0"
-          AnchorPane.bottomAnchor="0"
-          AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0">
+    <!-- Header -->
+    <VBox spacing="4">
 
-        <padding>
-            <Insets top="30"
-                    right="36"
-                    bottom="30"
-                    left="36"/>
-        </padding>
+        <HBox alignment="CENTER_LEFT"
+              spacing="15">
 
+            <Button onAction="#handleBack"
+                    styleClass="btn-back">
 
-        <!-- Header -->
-        <VBox alignment="CENTER"
-              spacing="5">
+                <graphic>
+                    <FontIcon iconLiteral="fas-arrow-left"
+                              styleClass="back-icon"/>
+                </graphic>
 
-            <Label text="Assign Module &amp; Class"
-                   styleClass="page-title"/>
+                <text>Back</text>
+            </Button>
 
-            <Label fx:id="lecturerNameLabel"
-                   text="Assign to: Lecturer"
-                   styleClass="lecturer-pill"/>
+            <Region HBox.hgrow="ALWAYS"/>
 
-        </VBox>
+            <HBox alignment="CENTER"
+                  spacing="10">
 
+                <FontIcon iconLiteral="fas-calendar-alt"
+                          styleClass="header-icon"/>
 
-        <!-- Class / Semester Selection -->
-        <HBox spacing="16"
-              alignment="BOTTOM_LEFT"
-              styleClass="selector-card">
+                <Label text="Lecture Schedule"
+                       styleClass="page-title"/>
 
-            <!-- Class -->
-            <VBox spacing="5">
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+
+        <Label text="Plan and manage the lecture timetable"
+               styleClass="page-subtitle"
+               alignment="CENTER"
+               maxWidth="Infinity"/>
+
+    </VBox>
+
+    <!-- Schedule Form -->
+    <VBox spacing="15"
+          styleClass="form-card">
+
+        <Label text="Create Lecture Schedule"
+               styleClass="section-title"/>
+
+        <!-- Lecturer / Module / Class -->
+        <HBox spacing="15">
+
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
+
+                <Label text="Lecturer"
+                       styleClass="field-caption"/>
+
+                <ComboBox fx:id="lecturerComboBox"
+                          promptText="Select Lecturer"
+                          maxWidth="Infinity"
+                          styleClass="dropdown"/>
+
+            </VBox>
+
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
+
+                <Label text="Module"
+                       styleClass="field-caption"/>
+
+                <ComboBox fx:id="moduleComboBox"
+                          promptText="Select Module"
+                          maxWidth="Infinity"
+                          styleClass="dropdown"/>
+
+            </VBox>
+
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
 
                 <Label text="Class"
                        styleClass="field-caption"/>
 
                 <ComboBox fx:id="classComboBox"
-                          prefWidth="210"
                           promptText="Select Class"
+                          maxWidth="Infinity"
                           styleClass="dropdown"/>
 
             </VBox>
-
-
-            <!-- Semester -->
-            <VBox spacing="5">
-
-                <Label text="Semester"
-                       styleClass="field-caption"/>
-
-                <ComboBox fx:id="semesterComboBox"
-                          prefWidth="180"
-                          promptText="Select Semester"
-                          styleClass="dropdown"/>
-
-            </VBox>
-
-
-            <!-- Load Modules -->
-            <Button text="🔄  Load Modules"
-                    onAction="#handleLoadModules"
-                    styleClass="btn-load"/>
 
         </HBox>
 
+        <!-- Day / Time -->
+        <HBox spacing="15">
 
-        <!-- Available Modules -->
-        <VBox spacing="10"
-              VBox.vgrow="ALWAYS">
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
 
-            <Label text="Available Modules"
-                   styleClass="section-title"/>
+                <Label text="Day"
+                       styleClass="field-caption"/>
 
-            <VBox spacing="0"
-                  styleClass="list-card"
-                  VBox.vgrow="ALWAYS">
-
-                <ListView fx:id="moduleListView"
-                          VBox.vgrow="ALWAYS"
-                          styleClass="module-list"/>
+                <ComboBox fx:id="dayComboBox"
+                          promptText="Select Day"
+                          maxWidth="Infinity"
+                          styleClass="dropdown"/>
 
             </VBox>
 
-        </VBox>
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
 
+                <Label text="Start Time"
+                       styleClass="field-caption"/>
 
-        <!-- Assign -->
-        <Button text="✔  Assign Selected Modules"
-                onAction="#handleAssignModules"
-                maxWidth="Infinity"
-                styleClass="btn-assign"/>
+                <TextField fx:id="startTimeField"
+                           promptText="e.g. 08:00"
+                           styleClass="text-input"/>
+
+            </VBox>
+
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
+
+                <Label text="End Time"
+                       styleClass="field-caption"/>
+
+                <TextField fx:id="endTimeField"
+                           promptText="e.g. 10:00"
+                           styleClass="text-input"/>
+
+            </VBox>
+
+            <VBox spacing="5"
+                  HBox.hgrow="ALWAYS">
+
+                <Label text="Room"
+                       styleClass="field-caption"/>
+
+                <TextField fx:id="roomField"
+                           promptText="e.g. Room 1"
+                           styleClass="text-input"/>
+
+            </VBox>
+
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT"
+              spacing="12">
+
+            <Button text="Clear"
+                    onAction="#handleClear"
+                    styleClass="btn-secondary"/>
+
+            <Button text="Add Schedule"
+                    onAction="#handleAddSchedule"
+                    styleClass="btn-primary"/>
+
+        </HBox>
 
     </VBox>
 
-</AnchorPane>
+    <!-- Schedule Table -->
+    <VBox spacing="10"
+          styleClass="list-card"
+          VBox.vgrow="ALWAYS">
 
+        <Label text="Current Lecture Timetable"
+               styleClass="section-title"/>
+
+        <TableView fx:id="scheduleTable"
+                   VBox.vgrow="ALWAYS">
+
+            <columns>
+
+                <TableColumn fx:id="lecturerColumn"
+                             text="Lecturer"
+                             prefWidth="170"/>
+
+                <TableColumn fx:id="moduleColumn"
+                             text="Module"
+                             prefWidth="180"/>
+
+                <TableColumn fx:id="classColumn"
+                             text="Class"
+                             prefWidth="110"/>
+
+                <TableColumn fx:id="dayColumn"
+                             text="Day"
+                             prefWidth="100"/>
+
+                <TableColumn fx:id="startTimeColumn"
+                             text="Start Time"
+                             prefWidth="100"/>
+
+                <TableColumn fx:id="endTimeColumn"
+                             text="End Time"
+                             prefWidth="100"/>
+
+                <TableColumn fx:id="roomColumn"
+                             text="Room"
+                             prefWidth="100"/>
+
+            </columns>
+
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT"
+              spacing="12">
+
+            <Button text="Edit Schedule"
+                    onAction="#handleEditSchedule"
+                    styleClass="btn-primary"/>
+
+            <Button text="Delete Schedule"
+                    onAction="#handleDeleteSchedule"
+                    styleClass="btn-danger"/>
+
+        </HBox>
+
+    </VBox>
+
+</VBox>

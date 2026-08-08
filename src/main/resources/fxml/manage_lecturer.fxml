@@ -90,36 +90,54 @@
             <HBox alignment="CENTER_RIGHT"
                   spacing="15">
 
-                <Button onAction="#handleAddLecturer" styleClass="btn-primary">
-                    <graphic>
-                        <FontIcon iconLiteral="fas-plus-circle" styleClass="btn-icon"/>
-                    </graphic>
-                    <text>Add Lecturer</text>
-                </Button>
-
-                <Button onAction="#handleAssignModules"
-                        styleClass="btn-secondary">
+                <!-- Add Lecturer -->
+                <Button onAction="#handleAddLecturer"
+                        styleClass="btn-primary">
 
                     <graphic>
-                        <FontIcon iconLiteral="fas-book"
+                        <FontIcon iconLiteral="fas-plus-circle"
                                   styleClass="btn-icon"/>
                     </graphic>
 
-                    <text>Assign Module &amp; Class</text>
-
+                    <text>Add Lecturer</text>
                 </Button>
 
-                <Button onAction="#handleEditLecturer" styleClass="btn-primary">
+
+                <!-- Assign Class & Modules -->
+                <Button onAction="#handleAssignToClass"
+                        styleClass="btn-secondary">
+
                     <graphic>
-                        <FontIcon iconLiteral="fas-edit" styleClass="btn-icon"/>
+                        <FontIcon iconLiteral="fas-chalkboard-teacher"
+                                  styleClass="btn-icon"/>
                     </graphic>
+
+                    <text>Assign Class &amp; Modules</text>
+                </Button>
+
+
+                <!-- Edit Lecturer -->
+                <Button onAction="#handleEditLecturer"
+                        styleClass="btn-primary">
+
+                    <graphic>
+                        <FontIcon iconLiteral="fas-edit"
+                                  styleClass="btn-icon"/>
+                    </graphic>
+
                     <text>Edit Lecturer</text>
                 </Button>
 
-                <Button onAction="#handleDeleteLecturer" styleClass="btn-danger">
+
+                <!-- Delete Lecturer -->
+                <Button onAction="#handleDeleteLecturer"
+                        styleClass="btn-danger">
+
                     <graphic>
-                        <FontIcon iconLiteral="fas-trash-alt" styleClass="btn-icon"/>
+                        <FontIcon iconLiteral="fas-trash-alt"
+                                  styleClass="btn-icon"/>
                     </graphic>
+
                     <text>Delete</text>
                 </Button>
 

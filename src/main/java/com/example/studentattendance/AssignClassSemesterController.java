@@ -1,17 +1,12 @@
 package com.example.studentattendance;
 
 import com.example.studentattendance.database.DBConnection;
-import com.example.studentattendance.models.Lecturer;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,48 +25,42 @@ public class AssignClassSemesterController {
     private ComboBox<String> semesterComboBox;
 
     @FXML
-    private ListView<String> moduleListView;
+    private ListView<ModuleItem> moduleListView;
 
+    private int lecturerId;
+    private String lecturerName;
 
-    private Lecturer lecturer;
+    public void setLecturer(int lecturerId, String lecturerName) {
 
-    /*
-     * Stores the database IDs of the modules currently
-     * displayed in the ListView.
-     */
-    private final ObservableList<Integer> moduleIds =
-            FXCollections.observableArrayList();
+        this.lecturerId = lecturerId;
+        this.lecturerName = lecturerName;
 
-
-    public void setLecturer(Lecturer lecturer) {
-
-        this.lecturer = lecturer;
-
-        if (lecturerNameLabel != null && lecturer != null) {
-
+        if (lecturerNameLabel != null) {
             lecturerNameLabel.setText(
-                    "Assign to: " + lecturer.getName()
+                    "Assign Modules to: " + lecturerName
             );
         }
-
-        loadClasses();
     }
 
     @FXML
     public void initialize() {
 
-        classComboBox.setOnAction(event -> {
+        // Allow selecting multiple modules
+        moduleListView.getSelectionModel()
+                .setSelectionMode(SelectionMode.MULTIPLE);
 
-            semesterComboBox.getItems().clear();
-            moduleListView.getItems().clear();
-            moduleIds.clear();
+        loadClasses();
+        loadSemesters();
 
-            if (classComboBox.getValue() != null) {
-                loadSemesters();
-            }
-        });
+        // Automatically load modules when both are selected
+        classComboBox.setOnAction(event -> loadModules());
+        semesterComboBox.setOnAction(event -> loadModules());
     }
 
+
+    // =========================================================
+    // LOAD CLASSES
+    // =========================================================
 
     private void loadClasses() {
 
@@ -98,36 +87,31 @@ public class AssignClassSemesterController {
 
             e.printStackTrace();
 
-            showAlert(
-                    Alert.AlertType.ERROR,
+            showError(
                     "Database Error",
-                    "Could not load classes:\n"
-                            + e.getMessage()
+                    "Failed to load classes: " + e.getMessage()
             );
         }
     }
+
+
+    // =========================================================
+    // LOAD SEMESTERS
+    // =========================================================
 
     private void loadSemesters() {
 
         semesterComboBox.getItems().clear();
 
-        String selectedClass =
-                classComboBox.getValue();
-
         String sql = """
                 SELECT DISTINCT semester
                 FROM modules
-                WHERE class_name = ?
-                AND semester IS NOT NULL
                 ORDER BY semester
                 """;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, selectedClass);
-
-            ResultSet rs = ps.executeQuery();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
 
@@ -140,17 +124,19 @@ public class AssignClassSemesterController {
 
             e.printStackTrace();
 
-            showAlert(
-                    Alert.AlertType.ERROR,
+            showError(
                     "Database Error",
-                    "Could not load semesters:\n"
-                            + e.getMessage()
+                    "Failed to load semesters: " + e.getMessage()
             );
         }
     }
 
-    @FXML
-    private void handleLoadModules() {
+
+    // =========================================================
+    // LOAD MODULES
+    // =========================================================
+
+    private void loadModules() {
 
         String selectedClass =
                 classComboBox.getValue();
@@ -158,45 +144,21 @@ public class AssignClassSemesterController {
         String selectedSemester =
                 semesterComboBox.getValue();
 
-
-        if (selectedClass == null
-                || selectedClass.isBlank()) {
-
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    "Select Class",
-                    "Please select a class first."
-            );
-
-            return;
-        }
-
-
-        if (selectedSemester == null
-                || selectedSemester.isBlank()) {
-
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    "Select Semester",
-                    "Please select a semester first."
-            );
-
-            return;
-        }
-
-
         moduleListView.getItems().clear();
-        moduleIds.clear();
 
+        if (selectedClass == null ||
+                selectedSemester == null) {
+
+            return;
+        }
 
         String sql = """
                 SELECT id, module_name
                 FROM modules
                 WHERE class_name = ?
-                AND semester = ?
+                  AND semester = ?
                 ORDER BY module_name
                 """;
-
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -204,95 +166,78 @@ public class AssignClassSemesterController {
             ps.setString(1, selectedClass);
             ps.setString(2, selectedSemester);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
 
+                while (rs.next()) {
 
-            while (rs.next()) {
+                    ModuleItem module =
+                            new ModuleItem(
+                                    rs.getInt("id"),
+                                    rs.getString("module_name")
+                            );
 
-                int moduleId =
-                        rs.getInt("id");
-
-                String moduleName =
-                        rs.getString("module_name");
-
-
-                moduleIds.add(moduleId);
-
-                moduleListView.getItems().add(
-                        moduleName
-                );
-            }
-
-
-            moduleListView.getSelectionModel()
-                    .setSelectionMode(
-                            SelectionMode.MULTIPLE
-                    );
-
-
-            if (moduleListView.getItems().isEmpty()) {
-
-                showAlert(
-                        Alert.AlertType.INFORMATION,
-                        "No Modules",
-                        "No modules were found for "
-                                + selectedClass
-                                + " - "
-                                + selectedSemester
-                );
+                    moduleListView.getItems().add(module);
+                }
             }
 
         } catch (SQLException e) {
 
             e.printStackTrace();
 
-            showAlert(
-                    Alert.AlertType.ERROR,
+            showError(
                     "Database Error",
-                    "Could not load modules:\n"
+                    "Failed to load modules: "
                             + e.getMessage()
             );
         }
     }
 
 
+    // =========================================================
+    // ASSIGN SELECTED MODULES
+    // =========================================================
+
     @FXML
     private void handleAssignModules() {
 
-        if (lecturer == null) {
+        // Make sure lecturer exists
+        if (lecturerId <= 0) {
 
-            showAlert(
-                    Alert.AlertType.ERROR,
+            showError(
                     "No Lecturer",
-                    "No lecturer has been selected."
+                    "No lecturer was selected."
             );
 
             return;
         }
 
+        // Make sure class and semester were selected
+        String selectedClass =
+                classComboBox.getValue();
 
-        if (moduleListView.getItems().isEmpty()) {
+        String selectedSemester =
+                semesterComboBox.getValue();
 
-            showAlert(
-                    Alert.AlertType.WARNING,
-                    "No Modules",
-                    "Load the modules first."
+        if (selectedClass == null ||
+                selectedSemester == null) {
+
+            showError(
+                    "Missing Selection",
+                    "Please select a class and semester."
             );
 
             return;
         }
 
-
-        ObservableList<Integer> selectedIndices =
+        // Get selected modules
+        var selectedModules =
                 moduleListView
                         .getSelectionModel()
-                        .getSelectedIndices();
+                        .getSelectedItems();
 
+        if (selectedModules.isEmpty()) {
 
-        if (selectedIndices.isEmpty()) {
-
-            showAlert(
-                    Alert.AlertType.WARNING,
+            showError(
                     "No Modules Selected",
                     "Please select at least one module."
             );
@@ -301,124 +246,227 @@ public class AssignClassSemesterController {
         }
 
 
-        String sql = """
+        String insertSql = """
                 INSERT INTO lecturer_module
-                    (lecturer_id, module_id)
+                (lecturer_id, module_id)
                 VALUES (?, ?)
                 """;
 
 
-        String checkSql = """
-                SELECT COUNT(*)
-                FROM lecturer_module
-                WHERE lecturer_id = ?
-                AND module_id = ?
-                """;
+        try (Connection conn =
+                     DBConnection.getConnection();
+             PreparedStatement ps =
+                     conn.prepareStatement(insertSql)) {
 
 
-        try (Connection conn = DBConnection.getConnection()) {
-
-            conn.setAutoCommit(false);
-
-
-            try {
-
-                for (Integer index : selectedIndices) {
-
-                    int moduleId =
-                            moduleIds.get(index);
-
-                    try (PreparedStatement check =
-                                 conn.prepareStatement(checkSql)) {
-
-                        check.setInt(
-                                1,
-                                lecturer.getId()
-                        );
-
-                        check.setInt(
-                                2,
-                                moduleId
-                        );
+            int assignedCount = 0;
+            int skippedCount = 0;
 
 
-                        ResultSet rs =
-                                check.executeQuery();
+            for (ModuleItem module : selectedModules) {
 
+                // Prevent duplicate assignment
+                if (isAlreadyAssigned(
+                        conn,
+                        lecturerId,
+                        module.getId())) {
 
-                        if (rs.next()
-                                && rs.getInt(1) > 0) {
-
-                            continue;
-                        }
-                    }
-
-                    try (PreparedStatement ps =
-                                 conn.prepareStatement(sql)) {
-
-                        ps.setInt(
-                                1,
-                                lecturer.getId()
-                        );
-
-                        ps.setInt(
-                                2,
-                                moduleId
-                        );
-
-                        ps.executeUpdate();
-                    }
+                    skippedCount++;
+                    continue;
                 }
 
 
-                conn.commit();
-
-
-                showAlert(
-                        Alert.AlertType.INFORMATION,
-                        "Assignment Successful",
-                        "Module(s) successfully assigned to "
-                                + lecturer.getName()
+                ps.setInt(
+                        1,
+                        lecturerId
                 );
 
+                ps.setInt(
+                        2,
+                        module.getId()
+                );
 
-                // Close window
-                Stage stage =
-                        (Stage) moduleListView
-                                .getScene()
-                                .getWindow();
+                ps.addBatch();
 
-                stage.close();
-
-
-            } catch (SQLException e) {
-
-                conn.rollback();
-
-                throw e;
+                assignedCount++;
             }
+
+
+            // Execute only if there are new assignments
+            if (assignedCount > 0) {
+                ps.executeBatch();
+            }
+
+
+            // Show appropriate result
+            if (assignedCount > 0 &&
+                    skippedCount > 0) {
+
+                showInfo(
+                        "Assignment Complete",
+                        assignedCount
+                                + " module(s) assigned to "
+                                + lecturerName
+                                + ".\n\n"
+                                + skippedCount
+                                + " module(s) were already assigned."
+                );
+
+            } else if (assignedCount > 0) {
+
+                showInfo(
+                        "Assignment Successful",
+                        assignedCount
+                                + " module(s) assigned to "
+                                + lecturerName
+                                + " successfully."
+                );
+
+            } else {
+
+                showInfo(
+                        "Already Assigned",
+                        "All selected modules are already assigned "
+                                + "to "
+                                + lecturerName
+                                + "."
+                );
+            }
+
+
+            // Clear selection
+            moduleListView
+                    .getSelectionModel()
+                    .clearSelection();
 
 
         } catch (SQLException e) {
 
             e.printStackTrace();
 
-            showAlert(
-                    Alert.AlertType.ERROR,
+            showError(
                     "Database Error",
-                    "Could not assign modules:\n"
+                    "Failed to assign modules: "
                             + e.getMessage()
             );
         }
     }
 
-    private void showAlert(
-            Alert.AlertType type,
+
+    // =========================================================
+    // CHECK DUPLICATE ASSIGNMENT
+    // =========================================================
+
+    private boolean isAlreadyAssigned(
+            Connection conn,
+            int lecturerId,
+            int moduleId
+    ) throws SQLException {
+
+        String sql = """
+                SELECT COUNT(*)
+                FROM lecturer_module
+                WHERE lecturer_id = ?
+                  AND module_id = ?
+                """;
+
+
+        try (PreparedStatement ps =
+                     conn.prepareStatement(sql)) {
+
+            ps.setInt(
+                    1,
+                    lecturerId
+            );
+
+            ps.setInt(
+                    2,
+                    moduleId
+            );
+
+
+            try (ResultSet rs =
+                         ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    // =========================================================
+    // MODULE ITEM
+    // =========================================================
+
+    public static class ModuleItem {
+
+        private final int id;
+        private final String moduleName;
+
+
+        public ModuleItem(
+                int id,
+                String moduleName
+        ) {
+
+            this.id = id;
+            this.moduleName = moduleName;
+        }
+
+
+        public int getId() {
+            return id;
+        }
+
+
+        public String getModuleName() {
+            return moduleName;
+        }
+
+
+        @Override
+        public String toString() {
+            return moduleName;
+        }
+    }
+
+
+    // =========================================================
+    // ERROR ALERT
+    // =========================================================
+
+    private void showError(
             String title,
-            String message) {
+            String message
+    ) {
 
         Alert alert =
-                new Alert(type);
+                new Alert(Alert.AlertType.ERROR);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
+
+    // =========================================================
+    // INFORMATION ALERT
+    // =========================================================
+
+    private void showInfo(
+            String title,
+            String message
+    ) {
+
+        Alert alert =
+                new Alert(Alert.AlertType.INFORMATION);
 
         alert.setTitle(title);
         alert.setHeaderText(null);

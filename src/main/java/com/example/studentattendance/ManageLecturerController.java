@@ -105,10 +105,8 @@ public class ManageLecturerController {
         }
     }
 
-
-
     @FXML
-    private void handleAssignModules() {
+    private void handleAssignToClass() {
         if (selectedLecturer == null) {
             showError(
                     "No Lecturer Selected",
@@ -119,7 +117,9 @@ public class ManageLecturerController {
 
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/assign_modules.fxml")
+                    getClass().getResource(
+                            "/fxml/assign_class_semester.fxml"
+                    )
             );
 
             Parent root = loader.load();
@@ -127,24 +127,28 @@ public class ManageLecturerController {
             AssignClassSemesterController controller =
                     loader.getController();
 
-            controller.setLecturer(selectedLecturer);
+            controller.setLecturer(
+                    selectedLecturer.getId(),
+                    selectedLecturer.getName()
+            );
 
             Stage stage = new Stage();
-
             stage.setTitle(
-                    "Assign Module & Class - "
+                    "Assign Class & Modules - "
                             + selectedLecturer.getName()
             );
 
             stage.setScene(new Scene(root));
-
             stage.showAndWait();
-
-            loadLecturers();
 
         } catch (IOException e) {
             e.printStackTrace();
-            showError("Error", "Could not open assign modules dialog: " + e.getMessage());
+
+            showError(
+                    "Error",
+                    "Could not open assignment window: "
+                            + e.getMessage()
+            );
         }
     }
 

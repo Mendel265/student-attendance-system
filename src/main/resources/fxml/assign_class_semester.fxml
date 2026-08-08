@@ -1,53 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-        <?import javafx.geometry.Insets?>
-        <?import javafx.scene.control.*?>
-        <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.studentattendance.AssignClassSemesterController"
-            prefWidth="640" prefHeight="560"
-            stylesheets="@../styles/assign_class_semester.css"
+            prefWidth="640"
+            prefHeight="560"
             styleClass="assign-root">
 
-    <VBox spacing="20" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
-          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <VBox spacing="20"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
         <padding>
             <Insets top="30" right="36" bottom="30" left="36"/>
         </padding>
 
         <!-- Header -->
         <VBox alignment="CENTER" spacing="4">
-            <Label text="Assign Modules" styleClass="page-title"/>
-            <Label fx:id="lecturerNameLabel" text="Assign Modules to: Lecturer Name" styleClass="lecturer-pill"/>
+
+            <Label text="Assign Modules"
+                   styleClass="page-title"/>
+
+            <Label fx:id="lecturerNameLabel"
+                   text="Assign Modules to: Lecturer"
+                   styleClass="lecturer-pill"/>
+
         </VBox>
 
-        <!-- Selector Card -->
-        <HBox spacing="16" alignment="BOTTOM_LEFT" styleClass="selector-card">
+        <!-- Class / Semester -->
+        <HBox spacing="16"
+              alignment="BOTTOM_LEFT"
+              styleClass="selector-card">
+
             <VBox spacing="5">
-                <Label text="Class" styleClass="field-caption"/>
-                <ComboBox fx:id="classComboBox" prefWidth="200" styleClass="dropdown"/>
+
+                <Label text="Class"
+                       styleClass="field-caption"/>
+
+                <ComboBox fx:id="classComboBox"
+                          prefWidth="200"
+                          promptText="Select Class"
+                          styleClass="dropdown"/>
+
             </VBox>
 
             <VBox spacing="5">
-                <Label text="Semester" styleClass="field-caption"/>
-                <ComboBox fx:id="semesterComboBox" prefWidth="200" styleClass="dropdown"/>
+
+                <Label text="Semester"
+                       styleClass="field-caption"/>
+
+                <ComboBox fx:id="semesterComboBox"
+                          prefWidth="200"
+                          promptText="Select Semester"
+                          styleClass="dropdown"/>
+
             </VBox>
 
-            <Button text="🔄  Load Modules" onAction="#handleLoadModules" styleClass="btn-load"/>
         </HBox>
 
-        <!-- Module List -->
-        <VBox spacing="10" VBox.vgrow="ALWAYS">
-            <Label text="Available Modules" styleClass="section-title"/>
+        <!-- Modules -->
+        <VBox spacing="10"
+              VBox.vgrow="ALWAYS">
 
-            <VBox spacing="0" styleClass="list-card" VBox.vgrow="ALWAYS">
-                <ListView fx:id="moduleListView" VBox.vgrow="ALWAYS" styleClass="module-list"/>
+            <Label text="Available Modules"
+                   styleClass="section-title"/>
+
+            <VBox spacing="0"
+                  styleClass="list-card"
+                  VBox.vgrow="ALWAYS">
+
+                <ListView fx:id="moduleListView"
+                          VBox.vgrow="ALWAYS"
+                          styleClass="module-list"/>
+
             </VBox>
+
         </VBox>
 
-        <Button text="✔  Assign Selected Modules" onAction="#handleAssignModules"
-                maxWidth="Infinity" styleClass="btn-assign"/>
+        <!-- Assign -->
+        <Button text="✔  Assign Selected Modules"
+                onAction="#handleAssignModules"
+                maxWidth="Infinity"
+                styleClass="btn-assign"/>
+
     </VBox>
+
 </AnchorPane>

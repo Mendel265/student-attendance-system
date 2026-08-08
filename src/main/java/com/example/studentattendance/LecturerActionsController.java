@@ -22,45 +22,98 @@ public class LecturerActionsController {
     private int lecturerId;
     private String lecturerName;
 
-    // Called from ManageLecturerController to pass lecturer info
-    public void setLecturerData(int lecturerId, String lecturerName) {
+    public void setLecturerData(
+            int lecturerId,
+            String lecturerName
+    ) {
+
         this.lecturerId = lecturerId;
         this.lecturerName = lecturerName;
-        lecturerNameLabel.setText("Actions for: " + lecturerName);
-    }
 
-    @FXML
-    private void handleViewAssignedClasses() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/view_assigned_classes.fxml"));
-            Parent root = loader.load();
-
-            ViewAssignedClassesController controller = loader.getController();
-            controller.setLecturerId(lecturerId, lecturerName);
-
-            Stage stage = new Stage();
-            stage.setTitle("View Assigned Classes - " + lecturerName);
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (lecturerNameLabel != null) {
+            lecturerNameLabel.setText(
+                    "Actions for: " + lecturerName
+            );
         }
     }
 
     @FXML
-    private void handleAssignClassAndModules() {
+    private void handleViewAssignedClasses() {
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/assign_class_semester.fxml"));
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/fxml/view_assigned_classes.fxml"
+                    )
+            );
+
             Parent root = loader.load();
 
-            AssignClassSemesterController controller = loader.getController();
-            controller.setLecturerId(lecturerId, lecturerName);
+            ViewAssignedClassesController controller =
+                    loader.getController();
+
+            controller.setLecturerId(
+                    lecturerId,
+                    lecturerName
+            );
 
             Stage stage = new Stage();
-            stage.setTitle("Assign Class and Modules - " + lecturerName);
-            stage.setScene(new Scene(root));
+
+            stage.setTitle(
+                    "Assigned Modules - "
+                            + lecturerName
+            );
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
             stage.show();
+
         } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    private void handleAssignClassAndModules() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/fxml/assign_class_semester.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            AssignClassSemesterController controller =
+                    loader.getController();
+
+            controller.setLecturer(
+                    lecturerId,
+                    lecturerName
+            );
+
+            Stage stage = new Stage();
+
+            stage.setTitle(
+                    "Assign Modules - "
+                            + lecturerName
+            );
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
+            stage.show();
+
+        } catch (Exception e) {
+
             e.printStackTrace();
         }
     }
