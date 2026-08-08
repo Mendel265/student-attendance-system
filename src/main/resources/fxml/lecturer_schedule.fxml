@@ -1,19 +1,35 @@
-<TableView fx:id="scheduleTable">
+<?xml version="1.0" encoding="UTF-8"?>
 
-    <columns>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-        <TableColumn fx:id="courseCodeColumn"
-                     text="Course Code"/>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.studentattendance.TodaysScheduleController">
 
-        <TableColumn fx:id="courseNameColumn"
-                     text="Course Name"/>
+    <TableView fx:id="scheduleTable">
 
-        <TableColumn fx:id="roomColumn"
-                     text="Room"/>
+        <columns>
 
-        <TableColumn fx:id="timeColumn"
-                     text="Time"/>
+            <TableColumn fx:id="courseCodeColumn"
+                         text="Course Code"/>
 
-    </columns>
+            <TableColumn fx:id="courseNameColumn"
+                         text="Course Name"/>
 
-</TableView>
+            <TableColumn fx:id="roomColumn"
+                         text="Room"/>
+
+            <TableColumn fx:id="startTimeColumn"
+                         text="Start Time"/>
+
+            <TableColumn fx:id="endTimeColumn"
+                         text="End Time"/>
+
+            <TableColumn fx:id="statusColumn"
+                         text="Status"/>
+
+        </columns>
+
+    </TableView>
+</AnchorPane>
