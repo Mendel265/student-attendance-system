@@ -15,35 +15,27 @@ public class TodaysScheduleController {
 
 
     @FXML
-    private Label dateLabel;
-
-
-    @FXML
     private TableView<Schedule> scheduleTable;
 
+    @FXML
+    private TableColumn<Schedule, String> moduleColumn;
 
     @FXML
-    private TableColumn<Schedule,String> courseCodeColumn;
-
-
-    @FXML
-    private TableColumn<Schedule,String> courseNameColumn;
-
+    private TableColumn<Schedule, String> classColumn;
 
     @FXML
-    private TableColumn<Schedule,String> roomColumn;
-
-
-    @FXML
-    private TableColumn<Schedule,String> startTimeColumn;
-
+    private TableColumn<Schedule, String> roomColumn;
 
     @FXML
-    private TableColumn<Schedule,String> endTimeColumn;
-
+    private TableColumn<Schedule, String> startTimeColumn;
 
     @FXML
-    private TableColumn<Schedule,String> statusColumn;
+    private TableColumn<Schedule, String> endTimeColumn;
+
+    @FXML
+    private TableColumn<Schedule, String> statusColumn;
+    @FXML
+    private Label dateLabel;
 
 
 
@@ -68,44 +60,31 @@ public class TodaysScheduleController {
 
 
 
-    private void setupColumns(){
+    private void setupColumns() {
 
-
-        courseCodeColumn.setCellValueFactory(
-                data -> data.getValue()
-                        .courseCodeProperty()
+        moduleColumn.setCellValueFactory(
+                data -> data.getValue().moduleNameProperty()
         );
 
-
-        courseNameColumn.setCellValueFactory(
-                data -> data.getValue()
-                        .courseNameProperty()
+        classColumn.setCellValueFactory(
+                data -> data.getValue().classNameProperty()
         );
-
 
         roomColumn.setCellValueFactory(
-                data -> data.getValue()
-                        .roomProperty()
+                data -> data.getValue().roomProperty()
         );
-
 
         startTimeColumn.setCellValueFactory(
-                data -> data.getValue()
-                        .startTimeProperty()
+                data -> data.getValue().startTimeProperty()
         );
-
 
         endTimeColumn.setCellValueFactory(
-                data -> data.getValue()
-                        .endTimeProperty()
+                data -> data.getValue().endTimeProperty()
         );
-
 
         statusColumn.setCellValueFactory(
-                data -> data.getValue()
-                        .statusProperty()
+                data -> data.getValue().statusProperty()
         );
-
     }
 
 
@@ -184,13 +163,8 @@ public class TodaysScheduleController {
 
         System.out.println(
                 "Starting attendance for "
-                        + selected.getCourseName()
+                        + selected.getModuleName()
         );
-
-
-        // Later:
-        // open face recognition attendance window
-
 
     }
 

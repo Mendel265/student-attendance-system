@@ -191,81 +191,32 @@ public class LecturerDashboardController {
     }
 
     private void loadAssignedClasses() {
-        // Try the original query first
-        String sql = """
-            SELECT COUNT(DISTINCT class_name)
-            FROM lecturer_modules
-            WHERE lecturer_id = ?
-        """;
 
-        try (Connection conn = DriverManager.getConnection(url, user, password);
+        String sql = """
+        SELECT COUNT(DISTINCT lm.module_id)
+        FROM lecturer_module lm
+        WHERE lm.lecturer_id = ?
+    """;
+
+        try (Connection conn =
+                     DriverManager.getConnection(url, user, password);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, lecturerId);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                assignedClassesLabel.setText(String.valueOf(rs.getInt(1)));
-                return;
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+                    assignedClassesLabel.setText(
+                            String.valueOf(rs.getInt(1))
+                    );
+                }
             }
 
         } catch (SQLException e) {
-            // Table doesn't exist, try alternative query
-            System.out.println("lecturer_modules table not found, trying alternative...");
-            loadAssignedClassesAlternative();
-        }
-    }
 
-    private void loadAssignedClassesAlternative() {
-        // Try to get assigned classes from schedule table
-        String sql = """
-            SELECT COUNT(DISTINCT s.class_name)
-            FROM schedule sc
-            JOIN lecturer_module lm ON sc.lecturer_module_id = lm.lecturer_module_id
-            JOIN modules m ON lm.module_id = m.id
-            WHERE lm.lecturer_id = ?
-        """;
+            e.printStackTrace();
 
-        try (Connection conn = DriverManager.getConnection(url, user, password);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, lecturerId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                assignedClassesLabel.setText(String.valueOf(rs.getInt(1)));
-                return;
-            }
-
-        } catch (SQLException e) {
-            // If both fail, try to get from lectures table
-            System.out.println("Schedule table also not found, trying lectures table...");
-            loadAssignedClassesFromLectures();
-        }
-    }
-
-    private void loadAssignedClassesFromLectures() {
-        // Last resort: get from lectures table
-        String sql = """
-            SELECT COUNT(DISTINCT module_name)
-            FROM lectures
-            WHERE lecture_id = ?
-        """;
-
-        try (Connection conn = DriverManager.getConnection(url, user, password);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, lecturerId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                assignedClassesLabel.setText(String.valueOf(rs.getInt(1)));
-                return;
-            }
-
-        } catch (SQLException e) {
-            // If all fail, set to 0
-            System.out.println("All queries failed, setting to 0");
             assignedClassesLabel.setText("0");
         }
     }

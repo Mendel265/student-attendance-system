@@ -1,93 +1,77 @@
 package com.example.studentattendance.models;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class Schedule {
 
+    private final StringProperty moduleName;
+    private final StringProperty className;
+    private final StringProperty room;
+    private final StringProperty startTime;
+    private final StringProperty endTime;
+    private final StringProperty status;
 
-    private String courseCode;
-    private String courseName;
-    private String room;
-    private String startTime;
-    private String endTime;
-    private String status;
-
-
-
-    public Schedule(String courseCode,
-                    String courseName,
+    public Schedule(String moduleName,
+                    String className,
                     String room,
                     String startTime,
                     String endTime,
-                    String status){
+                    String status) {
 
-        this.courseCode = courseCode;
-        this.courseName = courseName;
-        this.room = room;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.status = status;
-
+        this.moduleName = new SimpleStringProperty(moduleName);
+        this.className = new SimpleStringProperty(className);
+        this.room = new SimpleStringProperty(room);
+        this.startTime = new SimpleStringProperty(startTime);
+        this.endTime = new SimpleStringProperty(endTime);
+        this.status = new SimpleStringProperty(status);
     }
 
-
-
-    public String getCourseCode(){
-        return courseCode;
+    public String getModuleName() {
+        return moduleName.get();
     }
 
-
-    public String getCourseName(){
-        return courseName;
+    public StringProperty moduleNameProperty() {
+        return moduleName;
     }
 
+    public String getClassName() {
+        return className.get();
+    }
 
-    public String getRoom(){
+    public StringProperty classNameProperty() {
+        return className;
+    }
+
+    public String getRoom() {
+        return room.get();
+    }
+
+    public StringProperty roomProperty() {
         return room;
     }
 
+    public String getStartTime() {
+        return startTime.get();
+    }
 
-    public String getStartTime(){
+    public StringProperty startTimeProperty() {
         return startTime;
     }
 
+    public String getEndTime() {
+        return endTime.get();
+    }
 
-    public String getEndTime(){
+    public StringProperty endTimeProperty() {
         return endTime;
     }
 
+    public String getStatus() {
+        return status.get();
+    }
 
-    public String getStatus(){
+    public StringProperty statusProperty() {
         return status;
     }
-
-
-    public javafx.beans.property.StringProperty courseCodeProperty(){
-        return new javafx.beans.property.SimpleStringProperty(courseCode);
-    }
-
-
-    public javafx.beans.property.StringProperty courseNameProperty(){
-        return new javafx.beans.property.SimpleStringProperty(courseName);
-    }
-
-
-    public javafx.beans.property.StringProperty roomProperty(){
-        return new javafx.beans.property.SimpleStringProperty(room);
-    }
-
-
-    public javafx.beans.property.StringProperty startTimeProperty(){
-        return new javafx.beans.property.SimpleStringProperty(startTime);
-    }
-
-
-    public javafx.beans.property.StringProperty endTimeProperty(){
-        return new javafx.beans.property.SimpleStringProperty(endTime);
-    }
-
-
-    public javafx.beans.property.StringProperty statusProperty(){
-        return new javafx.beans.property.SimpleStringProperty(status);
-    }
-
 }

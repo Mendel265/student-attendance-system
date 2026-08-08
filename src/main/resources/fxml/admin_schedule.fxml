@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -9,44 +10,53 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.studentattendance.TodaysScheduleController">0">
+      fx:controller="com.example.studentattendance.ManageScheduleController"
+      spacing="15">
 
-    <Label text="Today's Schedule">
+    <padding>
+        <Insets top="25"
+                right="25"
+                bottom="25"
+                left="25"/>
+    </padding>
+
+    <Label text="Manage Lecture Schedule">
         <font>
             <Font size="24"/>
         </font>
     </Label>
 
-    <Label fx:id="dateLabel"
-           text="Date"/>
-
     <TableView fx:id="scheduleTable"
-               prefHeight="400">
+               prefHeight="500">
 
         <columns>
 
+            <TableColumn fx:id="lecturerColumn"
+                         text="Lecturer"
+                         prefWidth="180"/>
+
             <TableColumn fx:id="moduleColumn"
                          text="Module"
-                         prefWidth="200"/>
+                         prefWidth="180"/>
 
             <TableColumn fx:id="classColumn"
                          text="Class"
                          prefWidth="180"/>
 
-            <TableColumn fx:id="roomColumn"
-                         text="Room"
+            <TableColumn fx:id="dayColumn"
+                         text="Day"
                          prefWidth="120"/>
 
             <TableColumn fx:id="startTimeColumn"
                          text="Start Time"
-                         prefWidth="120"/>
+                         prefWidth="110"/>
 
             <TableColumn fx:id="endTimeColumn"
                          text="End Time"
-                         prefWidth="120"/>
+                         prefWidth="110"/>
 
-            <TableColumn fx:id="statusColumn"
-                         text="Status"
+            <TableColumn fx:id="roomColumn"
+                         text="Room"
                          prefWidth="120"/>
 
         </columns>
@@ -55,8 +65,5 @@
 
     <Button text="Refresh Schedule"
             onAction="#loadSchedule"/>
-
-    <Button text="Start Attendance"
-            onAction="#startAttendance"/>
 
 </VBox>
