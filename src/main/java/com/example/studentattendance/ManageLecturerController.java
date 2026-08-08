@@ -124,15 +124,22 @@ public class ManageLecturerController {
 
             Parent root = loader.load();
 
-            AssignModulesController controller = loader.getController();
+            AssignClassSemesterController controller =
+                    loader.getController();
+
             controller.setLecturer(selectedLecturer);
 
             Stage stage = new Stage();
-            stage.setTitle("Assign Modules - " + selectedLecturer.getName());
+
+            stage.setTitle(
+                    "Assign Module & Class - "
+                            + selectedLecturer.getName()
+            );
+
             stage.setScene(new Scene(root));
+
             stage.showAndWait();
 
-            // Refresh the table if any changes were made
             loadLecturers();
 
         } catch (IOException e) {

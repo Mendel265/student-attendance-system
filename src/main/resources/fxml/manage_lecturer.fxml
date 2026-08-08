@@ -97,11 +97,16 @@
                     <text>Add Lecturer</text>
                 </Button>
 
-                <Button onAction="#handleAssignModules" styleClass="btn-secondary">
+                <Button onAction="#handleAssignModules"
+                        styleClass="btn-secondary">
+
                     <graphic>
-                        <FontIcon iconLiteral="fas-book" styleClass="btn-icon"/>
+                        <FontIcon iconLiteral="fas-book"
+                                  styleClass="btn-icon"/>
                     </graphic>
-                    <text>Assign Module</text>
+
+                    <text>Assign Module &amp; Class</text>
+
                 </Button>
 
                 <Button onAction="#handleEditLecturer" styleClass="btn-primary">
