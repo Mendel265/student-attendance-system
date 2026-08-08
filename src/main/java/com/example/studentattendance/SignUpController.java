@@ -13,9 +13,17 @@ import java.sql.PreparedStatement;
 
 public class SignUpController {
 
-    @FXML private TextField usernameField;
-    @FXML private PasswordField passwordField;
-    @FXML private ComboBox<String> roleComboBox;
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private TextField emailField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private ComboBox<String> roleComboBox;
 
     @FXML
     public void handleSignup() {
@@ -29,11 +37,15 @@ public class SignUpController {
         }
 
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+            String sql = """ 
+            INSERT INTO users  (username, email, password, role)
+            VALUES (?, ?, ?, ?)
+            """;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, role);
+            stmt.setString(2, emailField.getText());
+            stmt.setString(3, password);
+            stmt.setString(4, role);
             stmt.executeUpdate();
 
             showAlert("Success", "Account created successfully!");

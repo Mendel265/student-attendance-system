@@ -13,6 +13,7 @@
       styleClass="signup-root">
 
     <VBox spacing="20" alignment="CENTER" styleClass="signup-card" maxWidth="360">
+
         <padding>
             <Insets top="36" right="34" bottom="30" left="34"/>
         </padding>
@@ -23,39 +24,102 @@
             <Label text="🎓" styleClass="brand-icon"/>
         </StackPane>
 
+        <!-- Header -->
         <VBox alignment="CENTER" spacing="4">
-            <Label text="Create Account" styleClass="page-title"/>
-            <Label text="Sign up to access Smart Attendance" styleClass="page-subtitle"/>
+
+            <Label text="Create Account"
+                   styleClass="page-title"/>
+
+            <Label text="Sign up to access Smart Attendance"
+                   styleClass="page-subtitle"/>
+
         </VBox>
+
 
         <!-- Form -->
-        <VBox spacing="14" fillWidth="true">
+        <VBox spacing="14"
+              fillWidth="true">
+
+            <!-- Username -->
             <VBox spacing="5">
-                <Label text="Username" styleClass="field-caption"/>
-                <TextField fx:id="usernameField" promptText="Choose a username" styleClass="text-input"/>
+
+                <Label text="Username"
+                       styleClass="field-caption"/>
+
+                <TextField fx:id="usernameField"
+                           promptText="Choose a username"
+                           styleClass="text-input"/>
+
             </VBox>
 
+
+            <!-- Email -->
             <VBox spacing="5">
-                <Label text="Password" styleClass="field-caption"/>
-                <PasswordField fx:id="passwordField" promptText="Create a password" styleClass="text-input"/>
+
+                <Label text="Email"
+                       styleClass="field-caption"/>
+
+                <TextField fx:id="emailField"
+                           promptText="Enter your email"
+                           styleClass="text-input"/>
+
             </VBox>
 
+
+            <!-- Password -->
             <VBox spacing="5">
-                <Label text="Role" styleClass="field-caption"/>
-                <ComboBox fx:id="roleComboBox" promptText="Select Role" maxWidth="Infinity" styleClass="dropdown">
+
+                <Label text="Password"
+                       styleClass="field-caption"/>
+
+                <PasswordField fx:id="passwordField"
+                               promptText="Create a password"
+                               styleClass="text-input"/>
+
+            </VBox>
+
+
+            <!-- Role -->
+            <VBox spacing="5">
+
+                <Label text="Role"
+                       styleClass="field-caption"/>
+
+                <ComboBox fx:id="roleComboBox"
+                          promptText="Select Role"
+                          maxWidth="Infinity"
+                          styleClass="dropdown">
+
                     <items>
+
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="admin" />
-                            <String fx:value="lecturer" />
+
+                            <String fx:value="admin"/>
+
+                            <String fx:value="lecturer"/>
+
                         </FXCollections>
+
                     </items>
+
                 </ComboBox>
+
             </VBox>
+
         </VBox>
 
-        <Button text="Register" onAction="#handleSignup" maxWidth="Infinity" styleClass="btn-register"/>
 
-        <Hyperlink text="Back to Login" onAction="#goToLogin" styleClass="link-back"/>
+        <!-- Register -->
+        <Button text="Register"
+                onAction="#handleSignup"
+                maxWidth="Infinity"
+                styleClass="btn-register"/>
+
+
+        <!-- Login -->
+        <Hyperlink text="Back to Login"
+                   onAction="#goToLogin"
+                   styleClass="link-back"/>
 
     </VBox>
 </VBox>
