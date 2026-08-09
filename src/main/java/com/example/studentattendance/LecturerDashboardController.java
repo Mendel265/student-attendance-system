@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
 
 public class LecturerDashboardController {
 
@@ -28,7 +28,8 @@ public class LecturerDashboardController {
 
     private static final String DB_PASSWORD = "";
 
-    private int lecturerId;
+
+    private int lecturerId = 0;
 
     @FXML
     private Label totalStudentsLabel;
@@ -54,11 +55,9 @@ public class LecturerDashboardController {
     @FXML
     private TableColumn<ScheduleRecord, String> scheduleStatusColumn;
 
-    @FXML
-    private PieChart attendanceChart;
 
-    @FXML
-    private ListView<String> activityList;
+    private final ObservableList<ScheduleRecord> scheduleList =
+            FXCollections.observableArrayList();
 
     @FXML
     private TableView<AttendanceRecord> attendanceTable;
@@ -85,22 +84,24 @@ public class LecturerDashboardController {
     private final ObservableList<AttendanceRecord> attendanceList =
             FXCollections.observableArrayList();
 
-    private final ObservableList<ScheduleRecord> scheduleList =
-            FXCollections.observableArrayList();
+    @FXML
+    private PieChart attendanceChart;
+
+    @FXML
+    private ListView<String> activityList;
 
 
     @FXML
     public void initialize() {
 
-        setupAttendanceTable();
-
         setupScheduleTable();
 
-        setupAttendanceChart();
+        setupAttendanceTable();
 
-        activityList.setItems(
-                FXCollections.observableArrayList()
-        );
+        if (attendanceChart != null) {
+            attendanceChart.setTitle("Today's Attendance");
+            attendanceChart.setLegendVisible(true);
+        }
     }
 
 
@@ -117,6 +118,11 @@ public class LecturerDashboardController {
 
         this.lecturerId = id;
 
+        System.out.println(
+                "Lecturer Dashboard - Lecturer ID: "
+                        + lecturerId
+        );
+
         loadDashboard();
     }
 
@@ -124,46 +130,47 @@ public class LecturerDashboardController {
 
         if (lecturerId <= 0) {
 
-            System.out.println(
-                    "Warning: Invalid lecturer ID."
+            System.err.println(
+                    "ERROR: Lecturer ID is not set."
             );
+
+            showDashboardError();
 
             return;
         }
 
-        loadDashboardStatistics();
-
-        loadTodaySchedule();
-
-        loadAttendanceOverview();
-
-        loadRecentActivity();
-
-        loadRecentAttendance();
-    }
-
-
-    private void loadDashboardStatistics() {
+        System.out.println(
+                "Loading dashboard for lecturer ID: "
+                        + lecturerId
+        );
 
         loadTotalStudents();
 
         loadTodayAttendance();
 
         loadAssignedClasses();
+
+        loadTodaySchedule();
+
+        loadAttendanceOverview();
+
+        loadRecentAttendance();
+
+        loadRecentActivity();
     }
 
 
     private void loadTotalStudents() {
 
         String sql = """
-            SELECT COUNT(DISTINCT s.student_id)
-            FROM students s
-            JOIN modules m
-                ON s.class_name = m.class_name
-            JOIN lecturer_module lm
-                ON lm.module_id = m.id
-            WHERE lm.lecturer_id = ?
-        """;
+        SELECT COUNT(DISTINCT s.student_id) AS total_students
+        FROM students s
+        JOIN modules m
+            ON s.class_name = m.class_name
+        JOIN lecturer_module lm
+            ON lm.module_id = m.id
+        WHERE lm.lecturer_id = ?
+    """;
 
         try (
                 Connection conn = getConnection();
@@ -176,8 +183,14 @@ public class LecturerDashboardController {
 
                 if (rs.next()) {
 
+                    int count = rs.getInt("total_students");
+
                     totalStudentsLabel.setText(
-                            String.valueOf(rs.getInt(1))
+                            String.valueOf(count)
+                    );
+
+                    System.out.println(
+                            "Total students: " + count
                     );
                 }
             }
@@ -197,7 +210,7 @@ public class LecturerDashboardController {
                 COUNT(*) AS total,
                 SUM(
                     CASE
-                        WHEN LOWER(a.status) = 'present'
+                        WHEN a.status = 'present'
                         THEN 1
                         ELSE 0
                     END
@@ -214,7 +227,8 @@ public class LecturerDashboardController {
 
         try (
                 Connection conn = getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
+                PreparedStatement ps =
+                        conn.prepareStatement(sql)
         ) {
 
             ps.setInt(1, lecturerId);
@@ -234,7 +248,8 @@ public class LecturerDashboardController {
                     if (total > 0) {
 
                         percentage =
-                                ((double) present / total) * 100;
+                                ((double) present / total)
+                                        * 100;
                     }
 
                     attendancePercentageLabel.setText(
@@ -243,6 +258,16 @@ public class LecturerDashboardController {
                                     percentage
                             )
                     );
+
+                    System.out.println(
+                            "Today's attendance: "
+                                    + present
+                                    + "/"
+                                    + total
+                                    + " = "
+                                    + percentage
+                                    + "%"
+                    );
                 }
             }
 
@@ -250,19 +275,19 @@ public class LecturerDashboardController {
 
             e.printStackTrace();
 
-            attendancePercentageLabel.setText("0%");
+            attendancePercentageLabel.setText(
+                    "0%"
+            );
         }
     }
 
-
     private void loadAssignedClasses() {
 
-
         String sql = """
-            SELECT COUNT(DISTINCT lm.module_id)
-            FROM lecturer_module lm
-            WHERE lm.lecturer_id = ?
-        """;
+        SELECT COUNT(DISTINCT lm.lecturer_module_id) AS assigned_classes
+        FROM lecturer_module lm
+        WHERE lm.lecturer_id = ?
+    """;
 
         try (
                 Connection conn = getConnection();
@@ -275,8 +300,14 @@ public class LecturerDashboardController {
 
                 if (rs.next()) {
 
+                    int count = rs.getInt("assigned_classes");
+
                     assignedClassesLabel.setText(
-                            String.valueOf(rs.getInt(1))
+                            String.valueOf(count)
+                    );
+
+                    System.out.println(
+                            "Assigned classes/modules: " + count
                     );
                 }
             }
@@ -290,6 +321,10 @@ public class LecturerDashboardController {
     }
 
     private void setupScheduleTable() {
+
+        if (scheduleTimeColumn == null) {
+            return;
+        }
 
         scheduleTimeColumn.setCellValueFactory(
                 new PropertyValueFactory<>("time")
@@ -316,27 +351,27 @@ public class LecturerDashboardController {
         );
     }
 
+
     private void loadTodaySchedule() {
 
         scheduleList.clear();
 
         String sql = """
-            SELECT
-                s.start_time,
-                s.end_time,
-                m.module_name,
-                m.class_name
-            FROM schedule s
-            JOIN lecturer_module lm
-                ON s.lecturer_module_id =
-                   lm.lecturer_module_id
-            JOIN modules m
-                ON lm.module_id = m.id
-            WHERE lm.lecturer_id = ?
-              AND LOWER(TRIM(s.day_of_week)) =
-                  LOWER(DAYNAME(CURDATE()))
-            ORDER BY s.start_time
-        """;
+        SELECT
+            sc.start_time,
+            sc.end_time,
+            m.module_name,
+            m.class_name
+        FROM schedule sc
+        JOIN lecturer_module lm
+            ON sc.lecturer_module_id =
+               lm.lecturer_module_id
+        JOIN modules m
+            ON lm.module_id = m.id
+        WHERE lm.lecturer_id = ?
+          AND sc.day_of_week = DAYNAME(CURDATE())
+        ORDER BY sc.start_time ASC
+    """;
 
         try (
                 Connection conn = getConnection();
@@ -345,31 +380,31 @@ public class LecturerDashboardController {
 
             ps.setInt(1, lecturerId);
 
+            System.out.println(
+                    "Loading schedule for lecturer ID: "
+                            + lecturerId
+            );
+
             try (ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
 
-                    String start =
-                            formatTime(
-                                    rs.getString("start_time")
-                            );
+                    String start = formatTime(
+                            rs.getString("start_time")
+                    );
 
-                    String end =
-                            formatTime(
-                                    rs.getString("end_time")
-                            );
+                    String end = formatTime(
+                            rs.getString("end_time")
+                    );
 
-                    String module =
-                            rs.getString("module_name");
+                    String module = rs.getString("module_name");
 
-                    String className =
-                            rs.getString("class_name");
+                    String className = rs.getString("class_name");
 
-                    String status =
-                            determineScheduleStatus(
-                                    rs.getString("start_time"),
-                                    rs.getString("end_time")
-                            );
+                    String status = getScheduleStatus(
+                            rs.getString("start_time"),
+                            rs.getString("end_time")
+                    );
 
                     scheduleList.add(
                             new ScheduleRecord(
@@ -379,10 +414,26 @@ public class LecturerDashboardController {
                                     status
                             )
                     );
+
+                    System.out.println(
+                            "Schedule: "
+                                    + start
+                                    + " - "
+                                    + end
+                                    + " | "
+                                    + module
+                                    + " | "
+                                    + className
+                    );
                 }
             }
 
             scheduleTable.refresh();
+
+            System.out.println(
+                    "Schedule records found: "
+                            + scheduleList.size()
+            );
 
         } catch (SQLException e) {
 
@@ -392,7 +443,7 @@ public class LecturerDashboardController {
         }
     }
 
-    private String determineScheduleStatus(
+    private String getScheduleStatus(
             String startTime,
             String endTime
     ) {
@@ -401,16 +452,12 @@ public class LecturerDashboardController {
 
             LocalTime start =
                     LocalTime.parse(
-                            startTime.length() >= 8
-                                    ? startTime.substring(0, 8)
-                                    : startTime
+                            startTime.substring(0, 8)
                     );
 
             LocalTime end =
                     LocalTime.parse(
-                            endTime.length() >= 8
-                                    ? endTime.substring(0, 8)
-                                    : endTime
+                            endTime.substring(0, 8)
                     );
 
             LocalTime now =
@@ -437,7 +484,7 @@ public class LecturerDashboardController {
 
     private String formatTime(String time) {
 
-        if (time == null || time.isBlank()) {
+        if (time == null) {
 
             return "--:--";
         }
@@ -450,8 +497,11 @@ public class LecturerDashboardController {
         return time;
     }
 
-
     private void setupAttendanceTable() {
+
+        if (fnameColumn == null) {
+            return;
+        }
 
         fnameColumn.setCellValueFactory(
                 new PropertyValueFactory<>("fname")
@@ -488,7 +538,6 @@ public class LecturerDashboardController {
         );
     }
 
-
     private void loadRecentAttendance() {
 
         attendanceList.clear();
@@ -515,14 +564,16 @@ public class LecturerDashboardController {
             JOIN modules m
                 ON lm.module_id = m.id
             WHERE lm.lecturer_id = ?
-            ORDER BY a.attendance_date DESC,
-                     attendance_time DESC
+            ORDER BY
+                a.attendance_date DESC,
+                attendance_time DESC
             LIMIT 10
         """;
 
         try (
                 Connection conn = getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
+                PreparedStatement ps =
+                        conn.prepareStatement(sql)
         ) {
 
             ps.setInt(1, lecturerId);
@@ -535,16 +586,27 @@ public class LecturerDashboardController {
                             new AttendanceRecord(
                                     rs.getString("fname"),
                                     rs.getString("lastname"),
-                                    rs.getString("module_name"),
-                                    rs.getString("class_name"),
+                                    rs.getString(
+                                            "module_name"
+                                    ),
+                                    rs.getString(
+                                            "class_name"
+                                    ),
                                     rs.getString("status"),
-                                    rs.getString("attendance_time")
+                                    rs.getString(
+                                            "attendance_time"
+                                    )
                             )
                     );
                 }
             }
 
             attendanceTable.refresh();
+
+            System.out.println(
+                    "Recent attendance records: "
+                            + attendanceList.size()
+            );
 
         } catch (SQLException e) {
 
@@ -555,55 +617,51 @@ public class LecturerDashboardController {
     }
 
 
-    private void setupAttendanceChart() {
-
-        attendanceChart.setLabelsVisible(true);
-
-        attendanceChart.setLegendVisible(true);
-
-        attendanceChart.setTitle(
-                "Today's Attendance"
-        );
-    }
-
     private void loadAttendanceOverview() {
 
         String sql = """
             SELECT
                 SUM(
                     CASE
-                        WHEN LOWER(a.status) = 'present'
+                        WHEN a.status = 'present'
                         THEN 1
                         ELSE 0
                     END
                 ) AS present,
+
                 SUM(
                     CASE
-                        WHEN LOWER(a.status) = 'absent'
+                        WHEN a.status = 'absent'
                         THEN 1
                         ELSE 0
                     END
                 ) AS absent,
+
                 SUM(
                     CASE
-                        WHEN LOWER(a.status) = 'pending'
+                        WHEN a.status = 'pending'
                         THEN 1
                         ELSE 0
                     END
                 ) AS pending
+
             FROM attendance a
+
             JOIN schedule sc
                 ON a.schedule_id = sc.schedule_id
+
             JOIN lecturer_module lm
                 ON sc.lecturer_module_id =
                    lm.lecturer_module_id
+
             WHERE lm.lecturer_id = ?
               AND a.attendance_date = CURDATE()
         """;
 
         try (
                 Connection conn = getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
+                PreparedStatement ps =
+                        conn.prepareStatement(sql)
         ) {
 
             ps.setInt(1, lecturerId);
@@ -625,11 +683,12 @@ public class LecturerDashboardController {
                     ObservableList<PieChart.Data> data =
                             FXCollections.observableArrayList();
 
+
                     if (present > 0) {
 
                         data.add(
                                 new PieChart.Data(
-                                        "Present (" + present + ")",
+                                        "Present",
                                         present
                                 )
                         );
@@ -639,7 +698,7 @@ public class LecturerDashboardController {
 
                         data.add(
                                 new PieChart.Data(
-                                        "Absent (" + absent + ")",
+                                        "Absent",
                                         absent
                                 )
                         );
@@ -649,7 +708,7 @@ public class LecturerDashboardController {
 
                         data.add(
                                 new PieChart.Data(
-                                        "Pending (" + pending + ")",
+                                        "Pending",
                                         pending
                                 )
                         );
@@ -660,7 +719,7 @@ public class LecturerDashboardController {
 
                         data.add(
                                 new PieChart.Data(
-                                        "No Records",
+                                        "No Attendance",
                                         1
                                 )
                         );
@@ -673,34 +732,29 @@ public class LecturerDashboardController {
         } catch (SQLException e) {
 
             e.printStackTrace();
-
-            attendanceChart.setData(
-                    FXCollections.observableArrayList(
-                            new PieChart.Data(
-                                    "No Records",
-                                    1
-                            )
-                    )
-            );
         }
     }
 
-
     private void loadRecentActivity() {
+
+        if (activityList == null) {
+            return;
+        }
 
         ObservableList<String> activities =
                 FXCollections.observableArrayList();
+
 
         String sql = """
             SELECT
                 s.fname,
                 s.lastname,
                 a.status,
+                m.module_name,
                 COALESCE(
                     a.check_in_time,
                     a.check_out_time
-                ) AS attendance_time,
-                m.module_name
+                ) AS attendance_time
             FROM attendance a
             JOIN students s
                 ON a.student_id = s.student_id
@@ -712,14 +766,17 @@ public class LecturerDashboardController {
             JOIN modules m
                 ON lm.module_id = m.id
             WHERE lm.lecturer_id = ?
-            ORDER BY a.attendance_date DESC,
-                     attendance_time DESC
+            ORDER BY
+                a.attendance_date DESC,
+                attendance_time DESC
             LIMIT 6
         """;
 
+
         try (
                 Connection conn = getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
+                PreparedStatement ps =
+                        conn.prepareStatement(sql)
         ) {
 
             ps.setInt(1, lecturerId);
@@ -728,39 +785,28 @@ public class LecturerDashboardController {
 
                 while (rs.next()) {
 
-                    String firstName =
-                            rs.getString("fname");
-
-                    String lastName =
-                            rs.getString("lastname");
-
-                    String status =
-                            rs.getString("status");
-
-                    String module =
-                            rs.getString("module_name");
-
-                    String time =
-                            rs.getString("attendance_time");
-
-
                     String activity =
-                            firstName
+                            rs.getString("fname")
                                     + " "
-                                    + lastName
-                                    + " • "
-                                    + status
-                                    + " • "
-                                    + module
-                                    + " • "
-                                    + formatActivityTime(time);
-
+                                    + rs.getString("lastname")
+                                    + " marked "
+                                    + rs.getString("status")
+                                    + " for "
+                                    + rs.getString("module_name")
+                                    + " at "
+                                    + formatTime(
+                                    rs.getString(
+                                            "attendance_time"
+                                    )
+                            );
 
                     activities.add(activity);
                 }
             }
 
-            activityList.setItems(activities);
+            activityList.setItems(
+                    activities
+            );
 
         } catch (SQLException e) {
 
@@ -772,33 +818,12 @@ public class LecturerDashboardController {
         }
     }
 
-    private String formatActivityTime(String time) {
-
-        if (time == null || time.isBlank()) {
-
-            return "--:--";
-        }
-
-        if (time.length() >= 5) {
-
-            return time.substring(0, 5);
-        }
-
-        return time;
-    }
-
-
     @FXML
-    public void handleTakeAttendance(ActionEvent event) {
+    public void handleTakeAttendance(
+            ActionEvent event
+    ) {
 
         try {
-
-            Stage stage =
-                    (Stage)
-                            ((Node) event.getSource())
-                                    .getScene()
-                                    .getWindow();
-
 
             FXMLLoader loader =
                     new FXMLLoader(
@@ -807,7 +832,8 @@ public class LecturerDashboardController {
                             )
                     );
 
-            Parent root = loader.load();
+            Parent root =
+                    loader.load();
 
 
             TakeAttendanceController controller =
@@ -816,6 +842,13 @@ public class LecturerDashboardController {
             controller.setLecturerId(
                     lecturerId
             );
+
+
+            Stage stage =
+                    (Stage)
+                            ((Node) event.getSource())
+                                    .getScene()
+                                    .getWindow();
 
 
             stage.setScene(
@@ -834,7 +867,7 @@ public class LecturerDashboardController {
 
             showAlert(
                     "Error",
-                    "Failed to load Take Attendance screen:\n"
+                    "Failed to load Take Attendance:\n"
                             + e.getMessage()
             );
         }
@@ -842,7 +875,9 @@ public class LecturerDashboardController {
 
 
     @FXML
-    public void handleRegisterStudent(ActionEvent event) {
+    public void handleRegisterStudent(
+            ActionEvent event
+    ) {
 
         try {
 
@@ -882,8 +917,11 @@ public class LecturerDashboardController {
             );
         }
     }
+
     @FXML
-    private void handleTrainModel(ActionEvent event) {
+    private void handleTrainModel(
+            ActionEvent event
+    ) {
 
         try {
 
@@ -925,7 +963,9 @@ public class LecturerDashboardController {
     }
 
     @FXML
-    private void onPrintAttendance(ActionEvent event) {
+    private void onPrintAttendance(
+            ActionEvent event
+    ) {
 
         try {
 
@@ -936,7 +976,8 @@ public class LecturerDashboardController {
                             )
                     );
 
-            Parent root = loader.load();
+            Parent root =
+                    loader.load();
 
 
             PrintAttendanceDialogController controller =
@@ -949,7 +990,8 @@ public class LecturerDashboardController {
             controller.initializeData();
 
 
-            Stage stage = new Stage();
+            Stage stage =
+                    new Stage();
 
             stage.setTitle(
                     "Print Attendance Report"
@@ -965,7 +1007,7 @@ public class LecturerDashboardController {
 
             stage.showAndWait();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
 
@@ -979,7 +1021,9 @@ public class LecturerDashboardController {
 
 
     @FXML
-    public void handleLogout(ActionEvent event) {
+    public void handleLogout(
+            ActionEvent event
+    ) {
 
         try {
 
@@ -1014,8 +1058,134 @@ public class LecturerDashboardController {
 
             showAlert(
                     "Error",
-                    "Failed to logout and load login screen."
+                    "Failed to logout."
             );
+        }
+    }
+
+    private void showDashboardError() {
+
+        totalStudentsLabel.setText("0");
+
+        attendancePercentageLabel.setText("0%");
+
+        assignedClassesLabel.setText("0");
+
+        if (scheduleList != null) {
+            scheduleList.clear();
+        }
+
+        if (attendanceList != null) {
+            attendanceList.clear();
+        }
+
+        System.err.println(
+                "Dashboard cannot load because lecturerId = 0."
+        );
+    }
+
+    public void refreshDashboard() {
+
+        loadDashboard();
+    }
+
+    public static class ScheduleRecord {
+
+        private final String time;
+        private final String module;
+        private final String className;
+        private final String status;
+
+
+        public ScheduleRecord(
+                String time,
+                String module,
+                String className,
+                String status
+        ) {
+
+            this.time = time;
+            this.module = module;
+            this.className = className;
+            this.status = status;
+        }
+
+
+        public String getTime() {
+            return time;
+        }
+
+
+        public String getModule() {
+            return module;
+        }
+
+
+        public String getClassName() {
+            return className;
+        }
+
+
+        public String getStatus() {
+            return status;
+        }
+    }
+
+    public static class AttendanceRecord {
+
+        private final String fname;
+        private final String lastname;
+        private final String module;
+        private final String className;
+        private final String status;
+        private final String time;
+
+
+        public AttendanceRecord(
+                String fname,
+                String lastname,
+                String module,
+                String className,
+                String status,
+                String time
+        ) {
+
+            this.fname = fname;
+            this.lastname = lastname;
+            this.module = module;
+            this.className = className;
+            this.status = status;
+            this.time = time;
+        }
+
+
+        public String getFname() {
+            return fname;
+        }
+
+
+        public String getLastname() {
+            return lastname;
+        }
+
+
+        public String getModule() {
+            return module;
+        }
+
+
+        public String getClassName() {
+            return className;
+        }
+
+
+        public String getStatus() {
+            return status;
+        }
+
+
+        public String getTime() {
+            return time;
         }
     }
 
@@ -1036,138 +1206,5 @@ public class LecturerDashboardController {
         alert.setContentText(message);
 
         alert.showAndWait();
-    }
-
-
-    public void refreshDashboard() {
-
-        loadDashboard();
-    }
-
-
-    public static class ScheduleRecord {
-
-        private final String time;
-
-        private final String module;
-
-        private final String className;
-
-        private final String status;
-
-
-        public ScheduleRecord(
-                String time,
-                String module,
-                String className,
-                String status
-        ) {
-
-            this.time = time;
-
-            this.module = module;
-
-            this.className = className;
-
-            this.status = status;
-        }
-
-
-        public String getTime() {
-
-            return time;
-        }
-
-
-        public String getModule() {
-
-            return module;
-        }
-
-
-        public String getClassName() {
-
-            return className;
-        }
-
-
-        public String getStatus() {
-
-            return status;
-        }
-    }
-
-    public static class AttendanceRecord {
-
-        private final String fname;
-
-        private final String lastname;
-
-        private final String module;
-
-        private final String className;
-
-        private final String status;
-
-        private final String time;
-
-
-        public AttendanceRecord(
-                String fname,
-                String lastname,
-                String module,
-                String className,
-                String status,
-                String time
-        ) {
-
-            this.fname = fname;
-
-            this.lastname = lastname;
-
-            this.module = module;
-
-            this.className = className;
-
-            this.status = status;
-
-            this.time = time;
-        }
-
-
-        public String getFname() {
-
-            return fname;
-        }
-
-
-        public String getLastname() {
-
-            return lastname;
-        }
-
-
-        public String getModule() {
-
-            return module;
-        }
-
-
-        public String getClassName() {
-
-            return className;
-        }
-
-
-        public String getStatus() {
-
-            return status;
-        }
-
-
-        public String getTime() {
-
-            return time;
-        }
     }
 }
