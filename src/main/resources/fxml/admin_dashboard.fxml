@@ -125,28 +125,28 @@
                         <FontIcon iconLiteral="fas-users" styleClass="stat-icon"/>
                         <Label text="LECTURERS" styleClass="stat-label"/>
                     </HBox>
-                    <Label text="--" styleClass="stat-value"/>
+                    <Label fx:id="lecturerCountLabel" text="0" styleClass="stat-value"/>
                 </VBox>
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <FontIcon iconLiteral="fas-user-friends" styleClass="stat-icon"/>
                         <Label text="STUDENTS" styleClass="stat-label"/>
                     </HBox>
-                    <Label text="--" styleClass="stat-value"/>
+                    <Label fx:id="studentCountLabel" text="0" styleClass="stat-value"/>
                 </VBox>
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <FontIcon iconLiteral="fas-chalkboard" styleClass="stat-icon"/>
                         <Label text="CLASSES" styleClass="stat-label"/>
                     </HBox>
-                    <Label text="--" styleClass="stat-value"/>
+                    <Label fx:id="classCountLabel" text="0" styleClass="stat-value"/>
                 </VBox>
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <FontIcon iconLiteral="fas-calendar-check" styleClass="stat-icon"/>
                         <Label text="TODAY'S ATTENDANCE" styleClass="stat-label"/>
                     </HBox>
-                    <Label text="--" styleClass="stat-value"/>
+                    <Label fx:id="attendanceCountLabel" text="0" styleClass="stat-value"/>
                 </VBox>
             </HBox>
 
