@@ -92,18 +92,34 @@ public class TakeAttendanceController {
 
     private void loadModulesForSemester() {
         String semester = semesterComboBox.getValue();
-        if (semester == null) return;
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT DISTINCT module_name FROM lecturer_modules WHERE lecturer_id = ? AND LOWER(semester) = ?"
-            );
+        if (semester == null || semester.trim().isEmpty()) {
+            return;
+        }
+
+        moduleComboBox.getItems().clear();
+
+        String sql = """
+        SELECT DISTINCT m.id, m.module_name
+        FROM lecturer_module lm
+        INNER JOIN modules m ON lm.module_id = m.id
+        WHERE lm.lecturer_id = ?
+          AND LOWER(TRIM(m.semester)) = LOWER(TRIM(?))
+        ORDER BY m.module_name
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, lecturerId);
-            stmt.setString(2, semester.trim().toLowerCase());
+            stmt.setString(2, semester);
 
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
-                moduleComboBox.getItems().add(rs.getString("module_name"));
+                moduleComboBox.getItems().add(
+                        rs.getString("module_name")
+                );
             }
 
         } catch (SQLException e) {
@@ -114,23 +130,49 @@ public class TakeAttendanceController {
     private void loadClassesForSemesterAndModule() {
         String semester = semesterComboBox.getValue();
         String module = moduleComboBox.getValue();
-        if (semester == null || module == null) return;
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT DISTINCT class_name FROM lecturer_modules WHERE lecturer_id = ? AND semester = ? AND module_name = ?"
-            );
+        if (semester == null || module == null ||
+                semester.trim().isEmpty() || module.trim().isEmpty()) {
+            return;
+        }
+
+        classComboBox.getItems().clear();
+
+        String sql = """
+        SELECT DISTINCT m.class_name
+        FROM lecturer_module lm
+        INNER JOIN modules m ON lm.module_id = m.id
+        WHERE lm.lecturer_id = ?
+          AND LOWER(TRIM(m.semester)) = LOWER(TRIM(?))
+          AND LOWER(TRIM(m.module_name)) = LOWER(TRIM(?))
+        ORDER BY m.class_name
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, lecturerId);
-            stmt.setString(2, semester.trim());
-            stmt.setString(3, module.trim());
+            stmt.setString(2, semester);
+            stmt.setString(3, module);
 
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                classComboBox.getItems().add(rs.getString("class_name"));
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    classComboBox.getItems().add(
+                            rs.getString("class_name")
+                    );
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
+            Platform.runLater(() ->
+                    showAlert(
+                            "Database Error",
+                            "Unable to load classes for the selected module.\n\n"
+                                    + e.getMessage()
+                    )
+            );
         }
     }
 
