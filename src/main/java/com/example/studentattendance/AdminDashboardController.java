@@ -28,21 +28,12 @@ import java.util.Locale;
 
 public class AdminDashboardController {
 
-    // ============================================================
-    // DATABASE CONFIGURATION
-    // ============================================================
-
     private static final String DB_URL =
             "jdbc:mysql://localhost:3306/students_attendance";
 
     private static final String DB_USER = "root";
 
     private static final String DB_PASSWORD = "";
-
-
-    // ============================================================
-    // STATISTIC LABELS
-    // ============================================================
 
     @FXML
     private Label lecturerCountLabel;
@@ -55,11 +46,6 @@ public class AdminDashboardController {
 
     @FXML
     private Label attendanceCountLabel;
-
-
-    // ============================================================
-    // TODAY'S LECTURE SECTION
-    // ============================================================
 
     @FXML
     private Label lectureDateLabel;
@@ -81,12 +67,6 @@ public class AdminDashboardController {
 
     @FXML
     private TableColumn<LectureRow, String> classColumn;
-
-
-    // ============================================================
-    // TODAY'S ATTENDANCE
-    // ============================================================
-
     @FXML
     private Label presentAttendanceLabel;
 
@@ -98,11 +78,6 @@ public class AdminDashboardController {
 
     @FXML
     private Label totalAttendanceLabel;
-
-
-    // ============================================================
-    // INITIALIZE
-    // ============================================================
 
     @FXML
     public void initialize() {
@@ -130,11 +105,6 @@ public class AdminDashboardController {
         );
     }
 
-
-    // ============================================================
-    // DASHBOARD STATISTICS
-    // ============================================================
-
     private void loadDashboardStatistics() {
 
         loadLecturerCount();
@@ -145,11 +115,6 @@ public class AdminDashboardController {
 
         loadTodayAttendance();
     }
-
-
-    // ============================================================
-    // TOTAL LECTURERS
-    // ============================================================
 
     private void loadLecturerCount() {
 
@@ -184,11 +149,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // TOTAL STUDENTS
-    // ============================================================
-
     private void loadStudentCount() {
 
         String sql =
@@ -221,11 +181,6 @@ public class AdminDashboardController {
             studentCountLabel.setText("0");
         }
     }
-
-
-    // ============================================================
-    // TOTAL CLASSES
-    // ============================================================
 
     private void loadClassCount() {
 
@@ -261,11 +216,6 @@ public class AdminDashboardController {
             classCountLabel.setText("0");
         }
     }
-
-
-    // ============================================================
-    // TODAY'S ATTENDANCE
-    // ============================================================
 
     private void loadTodayAttendance() {
 
@@ -352,11 +302,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // SET TODAY'S DATE
-    // ============================================================
-
     private void setTodayDate() {
 
         LocalDate today = LocalDate.now();
@@ -379,12 +324,6 @@ public class AdminDashboardController {
                 day + ", " + date
         );
     }
-
-
-    // ============================================================
-    // SETUP LECTURE TABLE
-    // ============================================================
-
     private void setupLectureTable() {
 
         timeColumn.setCellValueFactory(
@@ -428,11 +367,6 @@ public class AdminDashboardController {
                 )
         );
     }
-
-
-    // ============================================================
-    // LOAD TODAY'S LECTURES
-    // ============================================================
 
     private void loadTodayLectures() {
 
@@ -524,11 +458,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // FORMAT TIME
-    // ============================================================
-
     private String formatTime(String time) {
 
         if (time == null || time.isBlank()) {
@@ -550,11 +479,6 @@ public class AdminDashboardController {
 
         return time;
     }
-
-
-    // ============================================================
-    // MANAGE LECTURERS
-    // ============================================================
 
     @FXML
     public void handleManageLecturers(ActionEvent event) {
@@ -588,11 +512,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // MANAGE STUDENTS
-    // ============================================================
-
     @FXML
     public void handleManageStudents(ActionEvent event) {
 
@@ -600,11 +519,6 @@ public class AdminDashboardController {
                 "Manage Students clicked"
         );
     }
-
-
-    // ============================================================
-    // MANAGE CLASSES
-    // ============================================================
 
     @FXML
     private void handleManageClasses(ActionEvent event) {
@@ -648,11 +562,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // VIEW REPORTS
-    // ============================================================
-
     @FXML
     public void handleViewReports(ActionEvent event) {
 
@@ -660,11 +569,6 @@ public class AdminDashboardController {
                 "View Attendance Reports clicked"
         );
     }
-
-
-    // ============================================================
-    // MANAGE LECTURE SCHEDULE
-    // ============================================================
 
     @FXML
     private void handleManageSchedule(ActionEvent event) {
@@ -708,11 +612,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // LOGOUT
-    // ============================================================
-
     @FXML
     public void handleLogout(ActionEvent event) {
 
@@ -754,11 +653,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    // ============================================================
-    // REFRESH DASHBOARD
-    // ============================================================
-
     public void refreshDashboard() {
 
         setTodayDate();
@@ -767,11 +661,6 @@ public class AdminDashboardController {
 
         loadTodayLectures();
     }
-
-
-    // ============================================================
-    // LECTURE TABLE MODEL
-    // ============================================================
 
     public static class LectureRow {
 
