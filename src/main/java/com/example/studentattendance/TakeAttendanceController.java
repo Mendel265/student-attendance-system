@@ -380,10 +380,18 @@ public class TakeAttendanceController {
     }
 
     private void markAttendance(String studentId, String status) {
+
+        String semester = semesterComboBox.getValue();
+        String moduleName = moduleComboBox.getValue();
         String className = classComboBox.getValue();
-        String module = moduleComboBox.getValue();
-        if (className == null || module == null) {
-            Platform.runLater(() -> showAlert("Missing Selection", "Please select both class and module."));
+
+        if (semester == null || moduleName == null || className == null) {
+            Platform.runLater(() ->
+                    showAlert(
+                            "Missing Selection",
+                            "Please select semester, module and class."
+                    )
+            );
             return;
         }
 
@@ -391,48 +399,179 @@ public class TakeAttendanceController {
         LocalTime time = LocalTime.now();
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            if (status.equals("pending")) {
-                PreparedStatement insert = conn.prepareStatement(
-                        "INSERT INTO attendance (student_id, schedule_id, status, check_in_time)\n" +
-                                "VALUES (?, ?, ?, ?)"
-                );
-                insert.setString(1, studentId);
-                insert.setString(2, className);
-                insert.setDate(3, Date.valueOf(date));
-                insert.setTime(4, Time.valueOf(time));
-                insert.setString(5, "pending");
-                insert.setString(6, module);
-                insert.setInt(7, lecturerId);
-                insert.executeUpdate();
 
-            } else if (status.equals("present")) {
-                PreparedStatement update = conn.prepareStatement(
-                        "UPDATE attendance SET check_out_time = ?, status = ? WHERE student_id = ? AND class_name = ? AND attendance_date = ? AND status = 'pending'"
-                );
-                update.setTime(1, Time.valueOf(time));
-                update.setString(2, "present");
-                update.setString(3, studentId);
-                update.setString(4, className);
-                update.setDate(5, Date.valueOf(date));
+            String scheduleSql = """
+            SELECT s.schedule_id
+            FROM schedule s
+            INNER JOIN lecturer_module lm
+                ON s.lecturer_module_id = lm.lecturer_module_id
+            INNER JOIN modules m
+                ON lm.module_id = m.id
+            WHERE lm.lecturer_id = ?
+              AND LOWER(TRIM(m.semester)) = LOWER(TRIM(?))
+              AND LOWER(TRIM(m.module_name)) = LOWER(TRIM(?))
+              AND LOWER(TRIM(m.class_name)) = LOWER(TRIM(?))
+            LIMIT 1
+            """;
 
-                if (update.executeUpdate() == 0) {
-                    // no matching pending row (e.g. student checked out without a check-in on record)
-                    PreparedStatement insert = conn.prepareStatement(
-                            "INSERT INTO attendance (student_id, class_name, attendance_date, check_out_time, status, module, lecturer_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+            int scheduleId;
+
+            try (PreparedStatement scheduleStmt =
+                         conn.prepareStatement(scheduleSql)) {
+
+                scheduleStmt.setInt(1, lecturerId);
+                scheduleStmt.setString(2, semester.trim());
+                scheduleStmt.setString(3, moduleName.trim());
+                scheduleStmt.setString(4, className.trim());
+
+                try (ResultSet rs = scheduleStmt.executeQuery()) {
+
+                    if (!rs.next()) {
+
+                        Platform.runLater(() ->
+                                showAlert(
+                                        "Schedule Not Found",
+                                        "No lecture schedule was found for:\n\n"
+                                                + "Semester: " + semester + "\n"
+                                                + "Module: " + moduleName + "\n"
+                                                + "Class: " + className
+                                )
+                        );
+
+                        return;
+                    }
+
+                    scheduleId = rs.getInt("schedule_id");
+                }
+            }
+
+            if ("pending".equals(status)) {
+
+                String checkExistingSql = """
+                SELECT id
+                FROM attendance
+                WHERE student_id = ?
+                  AND schedule_id = ?
+                  AND attendance_date = ?
+                LIMIT 1
+                """;
+
+                try (PreparedStatement checkStmt =
+                             conn.prepareStatement(checkExistingSql)) {
+
+                    checkStmt.setString(1, studentId);
+                    checkStmt.setInt(2, scheduleId);
+                    checkStmt.setDate(3, Date.valueOf(date));
+
+                    try (ResultSet rs = checkStmt.executeQuery()) {
+
+                        if (rs.next()) {
+                            System.out.println(
+                                    "Attendance already exists for student "
+                                            + studentId
+                                            + " for schedule "
+                                            + scheduleId
+                            );
+                            return;
+                        }
+                    }
+                }
+
+                // Insert new check-in record
+                String insertSql = """
+                INSERT INTO attendance
+                    (student_id,
+                     schedule_id,
+                     attendance_date,
+                     check_in_time,
+                     status)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+                try (PreparedStatement insertStmt =
+                             conn.prepareStatement(insertSql)) {
+
+                    insertStmt.setString(1, studentId);
+                    insertStmt.setInt(2, scheduleId);
+                    insertStmt.setDate(3, Date.valueOf(date));
+                    insertStmt.setTime(4, Time.valueOf(time));
+                    insertStmt.setString(5, "pending");
+
+                    insertStmt.executeUpdate();
+
+                    System.out.println(
+                            "Check-in recorded: "
+                                    + studentId
+                                    + " | Schedule ID: "
+                                    + scheduleId
                     );
-                    insert.setString(1, studentId);
-                    insert.setString(2, className);
-                    insert.setDate(3, Date.valueOf(date));
-                    insert.setTime(4, Time.valueOf(time));
-                    insert.setString(5, "present");
-                    insert.setString(6, module);
-                    insert.setInt(7, lecturerId);
-                    insert.executeUpdate();
+                }
+
+            }
+
+
+            else if ("present".equals(status)) {
+
+                String updateSql = """
+                UPDATE attendance
+                SET check_out_time = ?,
+                    status = 'present'
+                WHERE student_id = ?
+                  AND schedule_id = ?
+                  AND attendance_date = ?
+                  AND status = 'pending'
+                LIMIT 1
+                """;
+
+                try (PreparedStatement updateStmt =
+                             conn.prepareStatement(updateSql)) {
+
+                    updateStmt.setTime(1, Time.valueOf(time));
+                    updateStmt.setString(2, studentId);
+                    updateStmt.setInt(3, scheduleId);
+                    updateStmt.setDate(4, Date.valueOf(date));
+
+                    int rowsUpdated = updateStmt.executeUpdate();
+
+                    if (rowsUpdated > 0) {
+
+                        System.out.println(
+                                "Check-out recorded: "
+                                        + studentId
+                                        + " | Schedule ID: "
+                                        + scheduleId
+                        );
+
+                    } else {
+
+                        System.out.println(
+                                "No pending attendance found for student "
+                                        + studentId
+                                        + " for schedule "
+                                        + scheduleId
+                        );
+
+                        Platform.runLater(() ->
+                                showAlert(
+                                        "Check-Out Not Found",
+                                        "No pending check-in was found for this student."
+                                )
+                        );
+                    }
                 }
             }
 
         } catch (SQLException e) {
+
             e.printStackTrace();
+
+            Platform.runLater(() ->
+                    showAlert(
+                            "Database Error",
+                            "Failed to record attendance.\n\n"
+                                    + e.getMessage()
+                    )
+            );
         }
     }
 

@@ -14,60 +14,135 @@
             styleClass="attendance-root">
 
     <children>
-        <VBox alignment="TOP_CENTER" spacing="22" styleClass="attendance-container"
-              AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
-              AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+
+        <VBox alignment="TOP_CENTER"
+              spacing="12"
+              styleClass="attendance-container"
+              AnchorPane.topAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"
+              AnchorPane.bottomAnchor="0">
 
             <padding>
-                <Insets top="28" right="32" bottom="28" left="32"/>
+                <Insets top="16"
+                        right="24"
+                        bottom="16"
+                        left="24"/>
             </padding>
 
-            <!-- Header -->
-            <VBox alignment="CENTER" spacing="4">
-                <Label text="Take Attendance" styleClass="page-title"/>
-                <Label text="Select a class, then start check-in or check-out" styleClass="page-subtitle"/>
+
+            <!-- HEADER -->
+            <VBox alignment="CENTER" spacing="2">
+
+                <Label text="Take Attendance"
+                       styleClass="page-title"/>
+
+                <Label text="Select a class, then start check-in or check-out"
+                       styleClass="page-subtitle"/>
+
             </VBox>
 
-            <!-- Class Selection Card -->
-            <HBox alignment="CENTER_LEFT" spacing="14" styleClass="selector-card">
-                <Label text="Select Class:" styleClass="selector-label"/>
+
+            <!-- CLASS SELECTION -->
+            <HBox alignment="CENTER"
+                  spacing="12"
+                  styleClass="selector-card">
 
                 <VBox spacing="2">
-                    <Label text="Semester" styleClass="field-caption"/>
-                    <ComboBox fx:id="semesterComboBox" promptText="Semester" styleClass="dropdown"/>
+
+                    <Label text="Semester"
+                           styleClass="field-caption"/>
+
+                    <ComboBox fx:id="semesterComboBox"
+                              promptText="Semester"
+                              prefWidth="170"
+                              styleClass="dropdown"/>
+
                 </VBox>
 
-                <VBox spacing="2">
-                    <Label text="Module" styleClass="field-caption"/>
-                    <ComboBox fx:id="moduleComboBox" promptText="Module" styleClass="dropdown"/>
-                </VBox>
 
                 <VBox spacing="2">
-                    <Label text="Class" styleClass="field-caption"/>
-                    <ComboBox fx:id="classComboBox" promptText="Class" styleClass="dropdown"/>
+
+                    <Label text="Module"
+                           styleClass="field-caption"/>
+
+                    <ComboBox fx:id="moduleComboBox"
+                              promptText="Module"
+                              prefWidth="220"
+                              styleClass="dropdown"/>
+
                 </VBox>
+
+
+                <VBox spacing="2">
+
+                    <Label text="Class"
+                           styleClass="field-caption"/>
+
+                    <ComboBox fx:id="classComboBox"
+                              promptText="Class"
+                              prefWidth="170"
+                              styleClass="dropdown"/>
+
+                </VBox>
+
             </HBox>
 
-            <!-- Webcam View -->
-            <StackPane styleClass="webcam-frame">
-                <ImageView fx:id="webcamView" fitWidth="700" fitHeight="440" preserveRatio="true"
+
+            <!-- WEBCAM -->
+            <StackPane alignment="CENTER"
+                       prefWidth="540"
+                       prefHeight="300"
+                       maxWidth="540"
+                       maxHeight="300"
+                       styleClass="webcam-frame">
+
+                <ImageView fx:id="webcamView"
+                           fitWidth="520"
+                           fitHeight="280"
+                           preserveRatio="true"
+                           smooth="true"
                            styleClass="webcam-view"/>
+
             </StackPane>
 
-            <!-- Status Row -->
-            <HBox alignment="CENTER" spacing="10" styleClass="status-pill">
-                <Circle radius="5" styleClass="status-dot"/>
-                <Label fx:id="statusLabel" text="Status: Idle" styleClass="status-label"/>
+
+            <!-- STATUS -->
+            <HBox alignment="CENTER"
+                  spacing="8"
+                  styleClass="status-pill">
+
+                <Circle radius="5"
+                        styleClass="status-dot"/>
+
+                <Label fx:id="statusLabel"
+                       text="Status: Idle"
+                       styleClass="status-label"/>
+
             </HBox>
 
-            <!-- Buttons -->
-            <HBox alignment="CENTER" spacing="24">
-                <Button fx:id="checkInButton" text="▶  Start Check-In" onAction="#onCheckIn"
-                        prefWidth="200" styleClass="btn-checkin"/>
-                <Button fx:id="checkOutButton" text="⏹  Start Check-Out" onAction="#onCheckOut"
-                        prefWidth="200" styleClass="btn-checkout"/>
+
+            <!-- BUTTONS -->
+            <HBox alignment="CENTER"
+                  spacing="16">
+
+                <Button fx:id="checkInButton"
+                        text="▶  Start Check-In"
+                        onAction="#onCheckIn"
+                        prefWidth="190"
+                        prefHeight="42"
+                        styleClass="btn-checkin"/>
+
+                <Button fx:id="checkOutButton"
+                        text="▶  Start Check-Out"
+                        onAction="#onCheckOut"
+                        prefWidth="190"
+                        prefHeight="42"
+                        styleClass="btn-checkout"/>
+
             </HBox>
 
         </VBox>
+
     </children>
 </AnchorPane>
