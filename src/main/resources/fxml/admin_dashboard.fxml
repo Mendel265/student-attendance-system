@@ -13,6 +13,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <BorderPane prefHeight="640" prefWidth="1020"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -113,97 +115,325 @@
 
     <!-- Center: Dashboard content -->
     <center>
-        <VBox spacing="28" styleClass="content-area">
+        <VBox spacing="24" styleClass="content-area">
             <padding>
                 <Insets top="8" right="36" bottom="36" left="36"/>
             </padding>
 
-            <!-- Quick stat strip -->
+            <!-- ================================================= -->
+            <!-- STATISTICS -->
+            <!-- ================================================= -->
+
             <HBox spacing="18" styleClass="stat-strip">
-                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+
+                <!-- Lecturers -->
+                <VBox styleClass="stat-card"
+                      HBox.hgrow="ALWAYS"
+                      maxWidth="Infinity">
+
                     <HBox alignment="CENTER_LEFT" spacing="8">
-                        <FontIcon iconLiteral="fas-users" styleClass="stat-icon"/>
-                        <Label text="LECTURERS" styleClass="stat-label"/>
+                        <FontIcon iconLiteral="fas-users"
+                                  styleClass="stat-icon"/>
+
+                        <Label text="LECTURERS"
+                               styleClass="stat-label"/>
                     </HBox>
-                    <Label fx:id="lecturerCountLabel" text="0" styleClass="stat-value"/>
+
+                    <Label fx:id="lecturerCountLabel"
+                           text="0"
+                           styleClass="stat-value"/>
                 </VBox>
-                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+
+
+                <!-- Students -->
+                <VBox styleClass="stat-card"
+                      HBox.hgrow="ALWAYS"
+                      maxWidth="Infinity">
+
                     <HBox alignment="CENTER_LEFT" spacing="8">
-                        <FontIcon iconLiteral="fas-user-friends" styleClass="stat-icon"/>
-                        <Label text="STUDENTS" styleClass="stat-label"/>
+                        <FontIcon iconLiteral="fas-user-friends"
+                                  styleClass="stat-icon"/>
+
+                        <Label text="STUDENTS"
+                               styleClass="stat-label"/>
                     </HBox>
-                    <Label fx:id="studentCountLabel" text="0" styleClass="stat-value"/>
+
+                    <Label fx:id="studentCountLabel"
+                           text="0"
+                           styleClass="stat-value"/>
                 </VBox>
-                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+
+
+                <!-- Classes -->
+                <VBox styleClass="stat-card"
+                      HBox.hgrow="ALWAYS"
+                      maxWidth="Infinity">
+
                     <HBox alignment="CENTER_LEFT" spacing="8">
-                        <FontIcon iconLiteral="fas-chalkboard" styleClass="stat-icon"/>
-                        <Label text="CLASSES" styleClass="stat-label"/>
+                        <FontIcon iconLiteral="fas-chalkboard"
+                                  styleClass="stat-icon"/>
+
+                        <Label text="CLASSES"
+                               styleClass="stat-label"/>
                     </HBox>
-                    <Label fx:id="classCountLabel" text="0" styleClass="stat-value"/>
+
+                    <Label fx:id="classCountLabel"
+                           text="0"
+                           styleClass="stat-value"/>
                 </VBox>
-                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+
+
+                <!-- Present Today -->
+                <VBox styleClass="stat-card"
+                      HBox.hgrow="ALWAYS"
+                      maxWidth="Infinity">
+
                     <HBox alignment="CENTER_LEFT" spacing="8">
-                        <FontIcon iconLiteral="fas-calendar-check" styleClass="stat-icon"/>
-                        <Label text="TODAY'S ATTENDANCE" styleClass="stat-label"/>
+                        <FontIcon iconLiteral="fas-calendar-check"
+                                  styleClass="stat-icon"/>
+
+                        <Label text="PRESENT TODAY"
+                               styleClass="stat-label"/>
                     </HBox>
-                    <Label fx:id="attendanceCountLabel" text="0" styleClass="stat-value"/>
+
+                    <Label fx:id="attendanceCountLabel"
+                           text="0"
+                           styleClass="stat-value"/>
                 </VBox>
+
             </HBox>
 
-            <Label text="Quick Actions" styleClass="section-heading"/>
 
-            <GridPane hgap="18" vgap="18" styleClass="nav-grid">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="33.33"/>
-                    <ColumnConstraints percentWidth="33.33"/>
-                    <ColumnConstraints percentWidth="33.33"/>
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints/>
-                    <RowConstraints/>
-                </rowConstraints>
+            <!-- ================================================= -->
+            <!-- TODAY'S LECTURES -->
+            <!-- ================================================= -->
 
-                <VBox styleClass="action-card" GridPane.rowIndex="0" GridPane.columnIndex="0"
-                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
-                    <FontIcon iconLiteral="fas-chalkboard-teacher" styleClass="action-icon"/>
-                    <Label text="Manage Lecturers" styleClass="action-title"/>
-                    <Label text="Add, edit or remove lecturer accounts" styleClass="action-desc" wrapText="true"/>
-                    <Button text="Open →" onAction="#handleManageLecturers" styleClass="action-link"/>
-                </VBox>
+            <VBox spacing="12"
+                  styleClass="dashboard-section"
+                  VBox.vgrow="ALWAYS">
 
-                <VBox styleClass="action-card" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
-                    <FontIcon iconLiteral="fas-user-graduate" styleClass="action-icon"/>
-                    <Label text="Manage Students" styleClass="action-title"/>
-                    <Label text="View and maintain student records" styleClass="action-desc" wrapText="true"/>
-                    <Button text="Open →" onAction="#handleManageStudents" styleClass="action-link"/>
-                </VBox>
+                <!-- Section Header -->
+                <HBox alignment="CENTER_LEFT">
 
-                <VBox styleClass="action-card" GridPane.rowIndex="0" GridPane.columnIndex="2"
-                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
-                    <FontIcon iconLiteral="fas-school" styleClass="action-icon"/>
-                    <Label text="Manage Classes" styleClass="action-title"/>
-                    <Label text="Create and organize class groups" styleClass="action-desc" wrapText="true"/>
-                    <Button text="Open →" onAction="#handleManageClasses" styleClass="action-link"/>
-                </VBox>
+                    <VBox spacing="3">
 
-                <VBox styleClass="action-card" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
-                    <FontIcon iconLiteral="fas-chart-pie" styleClass="action-icon"/>
-                    <Label text="Attendance Reports" styleClass="action-title"/>
-                    <Label text="Review attendance trends and exports" styleClass="action-desc" wrapText="true"/>
-                    <Button text="Open →" onAction="#handleViewReports" styleClass="action-link"/>
-                </VBox>
+                        <Label text="Today's Lectures"
+                               styleClass="section-heading"/>
 
-                <VBox styleClass="action-card" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                      maxWidth="Infinity" maxHeight="Infinity" spacing="6">
-                    <FontIcon iconLiteral="fas-clock" styleClass="action-icon"/>
-                    <Label text="Lecture Schedule" styleClass="action-title"/>
-                    <Label text="Plan and adjust lecture timetables" styleClass="action-desc" wrapText="true"/>
-                    <Button text="Open →" onAction="#handleManageSchedule" styleClass="action-link"/>
-                </VBox>
+                        <Label fx:id="lectureDateLabel"
+                               text="Today's scheduled lectures"
+                               styleClass="section-subtitle"/>
 
-            </GridPane>
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <FontIcon iconLiteral="fas-calendar-day"
+                              styleClass="section-icon"/>
+
+                </HBox>
+
+
+                <!-- Lecture Table -->
+                <TableView fx:id="todayLecturesTable"
+                           styleClass="dashboard-table"
+                           VBox.vgrow="ALWAYS">
+
+                    <columns>
+
+                        <!-- Time -->
+                        <TableColumn fx:id="timeColumn"
+                                     text="TIME"
+                                     prefWidth="130"
+                                     minWidth="100"/>
+
+                        <!-- Module -->
+                        <TableColumn fx:id="moduleColumn"
+                                     text="MODULE"
+                                     prefWidth="190"
+                                     minWidth="150"/>
+
+                        <!-- Lecturer -->
+                        <TableColumn fx:id="lecturerColumn"
+                                     text="LECTURER"
+                                     prefWidth="190"
+                                     minWidth="150"/>
+
+                        <!-- Room -->
+                        <TableColumn fx:id="roomColumn"
+                                     text="ROOM"
+                                     prefWidth="120"
+                                     minWidth="90"/>
+
+                        <!-- Class -->
+                        <TableColumn fx:id="classColumn"
+                                     text="CLASS"
+                                     prefWidth="140"
+                                     minWidth="100"/>
+
+                    </columns>
+
+                    <placeholder>
+                        <VBox alignment="CENTER"
+                              spacing="8">
+
+                            <FontIcon iconLiteral="fas-calendar-times"
+                                      styleClass="empty-icon"/>
+
+                            <Label text="No lectures scheduled for today"
+                                   styleClass="empty-message"/>
+
+                        </VBox>
+                    </placeholder>
+
+                </TableView>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- TODAY'S ATTENDANCE -->
+            <!-- ================================================= -->
+
+            <VBox spacing="14"
+                  styleClass="attendance-section">
+
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT">
+
+                    <VBox spacing="3">
+
+                        <Label text="Today's Attendance"
+                               styleClass="section-heading"/>
+
+                        <Label text="Attendance activity recorded today"
+                               styleClass="section-subtitle"/>
+
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <FontIcon iconLiteral="fas-chart-pie"
+                              styleClass="section-icon"/>
+
+                </HBox>
+
+
+                <!-- Attendance Summary -->
+                <HBox spacing="16"
+                      styleClass="attendance-summary">
+
+
+                    <!-- Present -->
+                    <VBox styleClass="attendance-card"
+                          HBox.hgrow="ALWAYS"
+                          maxWidth="Infinity">
+
+                        <HBox alignment="CENTER_LEFT"
+                              spacing="10">
+
+                            <FontIcon iconLiteral="fas-check-circle"
+                                      styleClass="attendance-present-icon"/>
+
+                            <VBox spacing="2">
+
+                                <Label text="PRESENT"
+                                       styleClass="attendance-label"/>
+
+                                <Label fx:id="presentAttendanceLabel"
+                                       text="0"
+                                       styleClass="attendance-value"/>
+
+                            </VBox>
+
+                        </HBox>
+
+                    </VBox>
+
+
+                    <!-- Absent -->
+                    <VBox styleClass="attendance-card"
+                          HBox.hgrow="ALWAYS"
+                          maxWidth="Infinity">
+
+                        <HBox alignment="CENTER_LEFT"
+                              spacing="10">
+
+                            <FontIcon iconLiteral="fas-times-circle"
+                                      styleClass="attendance-absent-icon"/>
+
+                            <VBox spacing="2">
+
+                                <Label text="ABSENT"
+                                       styleClass="attendance-label"/>
+
+                                <Label fx:id="absentAttendanceLabel"
+                                       text="0"
+                                       styleClass="attendance-value"/>
+
+                            </VBox>
+
+                        </HBox>
+
+                    </VBox>
+
+
+                    <!-- Pending -->
+                    <VBox styleClass="attendance-card"
+                          HBox.hgrow="ALWAYS"
+                          maxWidth="Infinity">
+
+                        <HBox alignment="CENTER_LEFT"
+                              spacing="10">
+
+                            <FontIcon iconLiteral="fas-clock"
+                                      styleClass="attendance-pending-icon"/>
+
+                            <VBox spacing="2">
+
+                                <Label text="PENDING"
+                                       styleClass="attendance-label"/>
+
+                                <Label fx:id="pendingAttendanceLabel"
+                                       text="0"
+                                       styleClass="attendance-value"/>
+
+                            </VBox>
+
+                        </HBox>
+
+                    </VBox>
+
+
+                    <!-- Total -->
+                    <VBox styleClass="attendance-card"
+                          HBox.hgrow="ALWAYS"
+                          maxWidth="Infinity">
+
+                        <HBox alignment="CENTER_LEFT"
+                              spacing="10">
+
+                            <FontIcon iconLiteral="fas-clipboard-list"
+                                      styleClass="attendance-total-icon"/>
+
+                            <VBox spacing="2">
+
+                                <Label text="TOTAL RECORDS"
+                                       styleClass="attendance-label"/>
+
+                                <Label fx:id="totalAttendanceLabel"
+                                       text="0"
+                                       styleClass="attendance-value"/>
+
+                            </VBox>
+
+                        </HBox>
+
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
 
         </VBox>
     </center>
